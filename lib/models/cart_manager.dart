@@ -72,7 +72,7 @@ class CartManager extends ChangeNotifier {
         productsPrice += cartProduct.totalPrice; // Calcula o preço total
         _updateCartProduct(cartProduct); // Atualiza o produto no carrinho
       }
-      print(productsPrice);
+      notifyListeners();
     }
 
     // Remove os itens fora da iteração para evitar ConcurrentModificationError
@@ -103,6 +103,15 @@ class CartManager extends ChangeNotifier {
 
   bool get isCartValid {
     // Função para verificar se o carrinho é válido
+    for (final cartProduct in items) {
+      if (!cartProduct.hasStock) {
+        return false; // Se algum produto não tiver estoque, retorna falso
+      }
+    }
+    return true; // Se todos os produtos tiverem estoque, retorna verdadeiro
+  }
+
+  bool get hasStock {
     for (final cartProduct in items) {
       if (!cartProduct.hasStock) {
         return false; // Se algum produto não tiver estoque, retorna falso
