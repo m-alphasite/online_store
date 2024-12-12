@@ -14,7 +14,7 @@ class BaseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return ChangeNotifierProvider(
       create: (_) =>
           PageManager(_pageController), // Cria e fornece o PageManager
       child: PageView(

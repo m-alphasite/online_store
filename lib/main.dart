@@ -6,6 +6,7 @@ import 'package:online_store/models/cart_manager.dart';
 import 'package:online_store/models/product.dart'; // Importa o modelo de produto
 import 'package:online_store/models/product_manager.dart'; // Importa o gerenciador de produtos
 import 'package:online_store/models/user_manager.dart'; // Importa o gerenciador de usuários
+import 'package:online_store/models/page_manager.dart'; // Importa o gerenciador de páginas
 import 'package:online_store/screens/base/base_screen.dart'; // Importa a tela base
 import 'package:online_store/screens/base/login/login_screen.dart'; // Importa a tela de login
 import 'package:online_store/screens/base/login/signup_screen.dart'; // Importa a tela de cadastro
@@ -47,7 +48,13 @@ class MyApp extends StatelessWidget {
           create: (_) => CartManager(), // Cria uma instância do produto
           lazy: false, // Garante que o produto seja criado imediatamente
           update: (_, userManager, cartManager) => // Atualiza o produto
-              cartManager..updateUser(userManager),
+              cartManager!..updateUser(userManager),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PageManager(
+              PageController()), // Cria uma instância do gerenciador de páginas
+          lazy:
+              false, // Garante que o gerenciador de páginas seja criado imediatamente
         ),
       ],
       child: MaterialApp(
