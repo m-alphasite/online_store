@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart'; // Importa o Flutter para construir a interface do usuário
+import 'package:online_store/common/custom_drawer/minhas_cores.dart';
+import 'package:online_store/models/cart_manager.dart'; // Importa o gerenciador de carrinho
+import 'package:provider/provider.dart'; // Importa o Flutter para construir a interface do usuário
 
 class PriceCard extends StatelessWidget {
   // Classe PriceCard que estende StatelessWidget
@@ -11,6 +14,10 @@ class PriceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Método build que cria a interface do usuário
+
+    final cartManager = context.watch<CartManager>(); // Observa o CartManager
+    final productPrice = cartManager.productsPrice; // Preço dos produtos
+
     return Card(
       margin: const EdgeInsets.symmetric(
           horizontal: 16.0, vertical: 8.0), // Define o espaçamento
@@ -43,7 +50,7 @@ class PriceCard extends StatelessWidget {
                 ),
                 Spacer(), // Espaço entre o texto e o valor
                 Text(
-                  'R\$ 200,00',
+                  'R\$ ${productPrice.toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
@@ -86,9 +93,10 @@ class PriceCard extends StatelessWidget {
                 ),
                 Spacer(),
                 Text(
-                  'R\$ 12,00',
+                  'R\$ ${(productPrice + 12.00).toStringAsFixed(2)}',
                   style: TextStyle(
                     fontSize: 16.0,
+                    color: MinhasCores.rosa_3,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
