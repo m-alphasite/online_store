@@ -3,9 +3,10 @@ import 'package:online_store/models/product.dart'; // Importa o modelo Product
 
 // Classe ProductListTile que estende StatelessWidget para criar um tile de lista de produtos
 class ProductListTile extends StatelessWidget {
-  const ProductListTile(
-      {super.key,
-      required this.product}); // Construtor da classe ProductListTile
+  const ProductListTile({
+    super.key,
+    required this.product, // Construtor da classe ProductListTile
+  });
 
   final Product product; // Declaração do produto
 
@@ -14,14 +15,15 @@ class ProductListTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Evento de clique
-        Navigator.of(context).pushNamed('/produtos',
-            arguments:
-                product); // Navega para a tela de detalhes do produto ao clicar
+        Navigator.of(context).pushNamed(
+          '/produtos',
+          arguments: product,
+        ); // Navega para a tela de detalhes do produto ao clicar
       },
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius:
-              BorderRadius.circular(04.0), // Define o raio da borda do card
+              BorderRadius.circular(4.0), // Define o raio da borda do card
         ),
         child: Container(
           height: 150, // Define a altura do container
@@ -48,8 +50,9 @@ class ProductListTile extends StatelessWidget {
                     Text(
                       product.name, // Nome do produto
                       style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 19.0), // Estilo do texto
+                        fontWeight: FontWeight.w800,
+                        fontSize: 19.0, // Estilo do texto
+                      ),
                     ),
                     Padding(
                       padding:
@@ -57,8 +60,9 @@ class ProductListTile extends StatelessWidget {
                       child: Text(
                         product.description, // Descrição do produto
                         style: const TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 12.0), // Estilo do texto
+                          fontWeight: FontWeight.w300,
+                          fontSize: 12.0, // Estilo do texto
+                        ),
                         maxLines: 2, // Limita a duas linhas
                         overflow: TextOverflow
                             .ellipsis, // Trunca o texto se for muito longo
@@ -70,8 +74,9 @@ class ProductListTile extends StatelessWidget {
                       child: const Text(
                         "A partir de", // Texto adicional
                         style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15.0), // Estilo do texto
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15.0, // Estilo do texto
+                        ),
                       ),
                     ),
                     const Text(

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart'; // Importa o Firestore do Firebase para interagir com o banco de dados
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // Importa o Flutter para construir a interface do usuário
 import 'package:online_store/models/cart_product.dart'; // Importa o modelo de produto do carrinho
 import 'package:online_store/models/product.dart'; // Importa o modelo Product
 import 'package:online_store/models/user.dart'; // Importa o modelo User
@@ -101,8 +101,8 @@ class CartManager extends ChangeNotifier {
     }
   }
 
+  // Função para verificar se o carrinho é válido
   bool get isCartValid {
-    // Função para verificar se o carrinho é válido
     for (final cartProduct in items) {
       if (!cartProduct.hasStock) {
         return false; // Se algum produto não tiver estoque, retorna falso
@@ -111,6 +111,7 @@ class CartManager extends ChangeNotifier {
     return true; // Se todos os produtos tiverem estoque, retorna verdadeiro
   }
 
+  // Função para verificar se todos os produtos têm estoque
   bool get hasStock {
     for (final cartProduct in items) {
       if (!cartProduct.hasStock) {

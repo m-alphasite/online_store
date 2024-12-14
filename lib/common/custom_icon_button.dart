@@ -3,33 +3,34 @@ import 'package:flutter/material.dart'; // Importa o pacote Flutter para constru
 // Classe que cria um botão personalizado
 class CustomIconButton extends StatelessWidget {
   const CustomIconButton({
-    super.key, // Construtor
-    required this.iconData, // Ícone
-    this.onTap, // Função ao clicar
-    required this.color, // Cor
+    super.key, // Chave do widget
+    required this.iconData, // Ícone do botão
+    this.onTap, // Função a ser executada ao clicar no botão
+    required this.color, // Cor do ícone
   });
 
-  final IconData iconData; // Ícone
-  final Color color; // Cor
-  final VoidCallback? onTap; // Função ao clicar
+  final IconData iconData; // Declaração do ícone
+  final Color color; // Declaração da cor
+  final VoidCallback? onTap; // Declaração da função ao clicar
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(50.0),
+      // Widget que permite recortar bordas com raios circulares
+      borderRadius: BorderRadius.circular(50.0), // Define o raio das bordas
       child: Material(
-        // Cria um material
-        color: Colors.transparent, // Cor transparente
+        // Cria um Material
+        color: Colors.transparent, // Define a cor do Material como transparente
         child: InkWell(
-          // Cria um InkWell
-          onTap: onTap, // Função ao clicar
+          // Cria um InkWell para detectar toques
+          onTap: onTap, // Define a função ao clicar
           child: Padding(
-            // Cria um padding
-            padding: const EdgeInsets.all(5.0), // Define o padding
+            // Adiciona um padding ao redor do ícone
+            padding: const EdgeInsets.all(5.0), // Define o tamanho do padding
             child: Icon(
               // Cria um ícone
-              iconData, // Ícone
-              color: color, // Cor
+              iconData, // Define o ícone
+              color: color, // Define a cor do ícone
             ),
           ),
         ),

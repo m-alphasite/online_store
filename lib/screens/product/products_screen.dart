@@ -6,7 +6,7 @@ import 'package:online_store/screens/product/components/product_list_tile.dart';
 import 'package:online_store/screens/product/components/search_dialog.dart'; // Importa o componente de diálogo de busca
 import 'package:provider/provider.dart'; // Importa o pacote provider para gerenciamento de estado
 
-// Classe ProductsScreen que estende StatelessWidget para criar a tela de produtos
+// Classe ProductsScreen que estende StatefulWidget para criar a tela de produtos
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
 
@@ -24,14 +24,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
               MinhasCores.rosa_1, // Define a cor de fundo do Scaffold
           drawer: const CustomDrawer(), // Adiciona o drawer personalizado
           appBar: AppBar(
-            leading: Builder(builder: (context) {
-              return IconButton(
-                icon: const Icon(Icons.menu), // Ícone de menu
-                color: Colors.white, // Cor do ícone
-                onPressed: () => Scaffold.of(context)
-                    .openDrawer(), // Abre o drawer ao clicar no ícone de menu
-              );
-            }),
+            leading: Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: const Icon(Icons.menu), // Ícone de menu
+                  color: Colors.white, // Cor do ícone
+                  onPressed: () => Scaffold.of(context)
+                      .openDrawer(), // Abre o drawer ao clicar no ícone de menu
+                );
+              },
+            ),
             title: Consumer<ProductManager>(
               builder: (_, productManager, __) {
                 if (productManager.search == null ||

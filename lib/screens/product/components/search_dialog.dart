@@ -2,9 +2,10 @@ import 'package:flutter/material.dart'; // Importa o pacote Flutter para constru
 
 // Classe SearchDialog que estende StatelessWidget para criar uma caixa de diálogo de busca
 class SearchDialog extends StatelessWidget {
-  const SearchDialog(
-      {super.key,
-      required this.initialText}); // Construtor da classe SearchDialog
+  const SearchDialog({
+    super.key,
+    required this.initialText, // Construtor da classe SearchDialog
+  });
 
   final String initialText; // Declaração do texto inicial
 

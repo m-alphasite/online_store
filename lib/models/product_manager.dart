@@ -47,4 +47,13 @@ class ProductManager extends ChangeNotifier {
 
     notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
   }
+
+  Product? findProductById(String id) {
+    try {
+      return allProducts
+          .firstWhere((p) => p.id == id); // Busca o produto pelo id
+    } catch (e) {
+      return null; // Retorna null se o produto não for encontrado
+    }
+  }
 }

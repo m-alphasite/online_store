@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart'; // Importa o pacote Flutter para construção de interfaces
-import 'package:carousel_slider/carousel_slider.dart'; // Importa o pacote Carousel Slider para criar carrosséis de imagens
-import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa as cores personalizadas
-import 'package:online_store/models/cart_manager.dart'; // Importa o gerenciador de carrinho
-import 'package:online_store/models/product.dart'; // Importa o modelo Product
-import 'package:online_store/screens/product/components/sizer_widget.dart'; // Importa o componente SizerWidget
 import 'package:provider/provider.dart'; // Importa o pacote provider para gerenciamento de estado
+import 'package:online_store/models/product.dart'; // Importa o modelo Product
 import 'package:online_store/models/user_manager.dart'; // Importa o gerenciador de usuários
+import 'package:online_store/models/cart_manager.dart'; // Importa o gerenciador de carrinho
+import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa as cores personalizadas
+import 'package:carousel_slider/carousel_slider.dart'; // Importa o carrossel de imagens
+import 'package:online_store/screens/product/components/sizer_widget.dart'; // Importa o widget de seleção de tamanho
 
-// Classe ProdutosScreen que estende StatefulWidget para criar a tela de detalhes do produto
+// Classe ProdutosScreen que estende StatefulWidget para criar a tela de produtos
 class ProdutosScreen extends StatefulWidget {
   final Product product; // Declaração do produto
 
-  const ProdutosScreen(
-      {super.key,
-      required this.product}); // Construtor da classe ProdutosScreen
+  const ProdutosScreen({
+    super.key,
+    required this.product, // Construtor da classe ProdutosScreen
+  });
 
   @override
   _ProdutosScreenState createState() =>
@@ -28,10 +29,11 @@ class _ProdutosScreenState extends State<ProdutosScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
-            value: widget.product), // Provedor do produto
+          value: widget.product, // Provedor do produto
+        ),
         ChangeNotifierProvider(
-            create: (_) =>
-                UserManager()), // Provedor do gerenciador de usuários
+          create: (_) => UserManager(), // Provedor do gerenciador de usuários
+        ),
       ],
       child: Scaffold(
         backgroundColor: Colors.white, // Define a cor de fundo do Scaffold

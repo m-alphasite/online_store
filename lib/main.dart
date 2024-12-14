@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart'; // Importa o pacote Firebase 
 import 'package:flutter/material.dart'; // Importa o Flutter para construir a interface do usuário
 import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa o arquivo de cores personalizadas
 import 'package:online_store/firebase_options.dart'; // Importa as opções de configuração do Firebase
-import 'package:online_store/models/cart_manager.dart';
-import 'package:online_store/models/home_manager.dart';
+import 'package:online_store/models/cart_manager.dart'; // Importa o gerenciador de carrinho
+import 'package:online_store/models/home_manager.dart'; // Importa o gerenciador de home
 import 'package:online_store/models/product.dart'; // Importa o modelo de produto
 import 'package:online_store/models/product_manager.dart'; // Importa o gerenciador de produtos
 import 'package:online_store/models/user_manager.dart'; // Importa o gerenciador de usuários
@@ -11,11 +11,12 @@ import 'package:online_store/models/page_manager.dart'; // Importa o gerenciador
 import 'package:online_store/screens/base/base_screen.dart'; // Importa a tela base
 import 'package:online_store/screens/base/login/login_screen.dart'; // Importa a tela de login
 import 'package:online_store/screens/base/login/signup_screen.dart'; // Importa a tela de cadastro
-import 'package:online_store/screens/cart/cart_screen.dart';
+import 'package:online_store/screens/cart/cart_screen.dart'; // Importa a tela de carrinho
 import 'package:online_store/screens/produtos/produtos_screen.dart'; // Importa a tela de produtos
 import 'package:provider/provider.dart'; // Importa o pacote provider para gerenciar o estado
 
 Future<void> main() async {
+  // Função principal que inicializa o aplicativo
   WidgetsFlutterBinding
       .ensureInitialized(); // Garante que o binding do Flutter esteja inicializado
   await Firebase.initializeApp(
@@ -47,9 +48,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) =>
-              HomeManager(), // Cria uma instância do modelo de produto
+              HomeManager(), // Cria uma instância do gerenciador de home
           lazy:
-              false, // Garante que o modelo de produto seja criado imediatamente
+              false, // Garante que o gerenciador de home seja criado imediatamente
         ),
         ChangeNotifierProxyProvider<UserManager, CartManager>(
           create: (_) =>
@@ -87,11 +88,12 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case '/login':
               return MaterialPageRoute(
-                  builder: (_) => LoginScreen()); // Rota para a tela de login
+                builder: (_) => LoginScreen(), // Rota para a tela de login
+              );
             case '/signup':
               return MaterialPageRoute(
-                  builder: (_) =>
-                      SignupScreen()); // Rota para a tela de cadastro
+                builder: (_) => SignupScreen(), // Rota para a tela de cadastro
+              );
             case '/produtos':
               return MaterialPageRoute(
                 builder: (_) => ProdutosScreen(
@@ -105,11 +107,13 @@ class MyApp extends StatelessWidget {
               );
             case '/base':
               return MaterialPageRoute(
-                  builder: (_) => BaseScreen()); // Rota para a tela base
+                builder: (_) => BaseScreen(), // Rota para a tela base
+              );
             default:
               return MaterialPageRoute(
-                  builder: (_) =>
-                      LoginScreen()); // Rota padrão para a tela de login
+                builder: (_) =>
+                    LoginScreen(), // Rota padrão para a tela de login
+              );
           }
         },
       ),

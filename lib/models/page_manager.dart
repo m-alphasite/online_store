@@ -5,19 +5,20 @@ class PageManager extends ChangeNotifier {
   PageManager(this._pageController); // Construtor que recebe um PageController
 
   final PageController _pageController; // Controlador de páginas
-  int page = 0;
+  int page = 0; // Variável que armazena a página atual
 
-  void setPage(int value, // Define a página atual
-      {Duration duration =
-          const Duration(milliseconds: 300), // Define a duração da animação
-      Curve curve = Curves.ease}) {
-    // Define a curva da animação
+  // Método para definir a página atual com animação
+  void setPage(
+    int value, {
+    Duration duration =
+        const Duration(milliseconds: 300), // Define a duração da animação
+    Curve curve = Curves.ease, // Define a curva da animação
+  }) {
     if (value == page)
-      return; // Se a página atual for igual à página desejada, não faça nada
+      return; // Se a página atual for igual à página desejada, não faz nada
 
-    page = value; // Define a página atual
+    page = value; // Atualiza a página atual
     _pageController.animateToPage(
-      // Anima a página atual
       value, // Define a página desejada
       duration: duration, // Define a duração da animação
       curve: curve, // Define a curva da animação

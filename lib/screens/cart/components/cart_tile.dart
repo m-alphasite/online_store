@@ -4,8 +4,8 @@ import 'package:online_store/common/custom_icon_button.dart'; // Importa o Custo
 import 'package:online_store/models/cart_product.dart'; // Importa o modelo de produto do carrinho
 import 'package:provider/provider.dart'; // Importa o pacote provider
 
+// Classe CartTile que estende StatelessWidget para criar um tile de produto no carrinho
 class CartTile extends StatelessWidget {
-  // Define a classe CartTile como uma StatelessWidget
   const CartTile(this.cartProduct, {super.key}); // Construtor da classe
   final CartProduct
       cartProduct; // Define o atributo cartProduct como um CartProduct
@@ -14,18 +14,23 @@ class CartTile extends StatelessWidget {
   Widget build(BuildContext context) {
     // Método build para construir a interface do usuário
     return ChangeNotifierProvider.value(
-      value: cartProduct,
+      value:
+          cartProduct, // Define o cartProduct como o valor do ChangeNotifierProvider
       child: Card(
         margin: const EdgeInsets.symmetric(
-            horizontal: 16, vertical: 4), // Define o espaçamento
+          horizontal: 16,
+          vertical: 4,
+        ), // Define o espaçamento do Card
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: 16, vertical: 8), // Define o espaçamento
+            horizontal: 16,
+            vertical: 8,
+          ), // Define o espaçamento interno do Card
           child: Row(
             children: <Widget>[
               SizedBox(
-                height: 80,
-                width: 80,
+                height: 80, // Define a altura do container da imagem
+                width: 80, // Define a largura do container da imagem
                 child: cartProduct.product.images.isNotEmpty
                     ? Image.network(cartProduct
                         .product.images.first) // Exibe a imagem do produto
@@ -34,7 +39,8 @@ class CartTile extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
+                  padding: const EdgeInsets.only(
+                      left: 16), // Define o padding à esquerda
                   child: Column(
                     crossAxisAlignment:
                         CrossAxisAlignment.start, // Alinha o texto ao início
@@ -66,17 +72,19 @@ class CartTile extends StatelessWidget {
                               style: TextStyle(
                                 color:
                                     MinhasCores.rosa_3, // Define a cor do texto
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 19, // Define o tamanho da fonte
+                                fontWeight:
+                                    FontWeight.bold, // Define o peso da fonte
                               ),
                             );
                           } else {
                             return const Text(
-                              "Produto Indisponível",
+                              "Produto Indisponível", // Texto para produto indisponível
                               style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
+                                color: Colors.red, // Cor do texto
+                                fontSize: 19, // Define o tamanho da fonte
+                                fontWeight:
+                                    FontWeight.bold, // Define o peso da fonte
                               ),
                             );
                           }
@@ -86,33 +94,36 @@ class CartTile extends StatelessWidget {
                   ),
                 ),
               ),
-              Consumer<CartProduct>(builder: (_, cartProduct, __) {
-                return Column(
-                  children: <Widget>[
-                    CustomIconButton(
-                      iconData: Icons.add, // Ícone de adicionar
-                      color: Colors.green, // Define a cor do ícone
-                      onTap: cartProduct.increment, // Função ao clicar
-                    ),
-                    Text(
-                      "${cartProduct.quantity} ", // Exibe a quantidade
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: Colors.black,
+              Consumer<CartProduct>(
+                builder: (_, cartProduct, __) {
+                  return Column(
+                    children: <Widget>[
+                      CustomIconButton(
+                        iconData: Icons.add, // Ícone de adicionar
+                        color: Colors.green, // Define a cor do ícone
+                        onTap: cartProduct.increment, // Função ao clicar
                       ),
-                    ),
-                    CustomIconButton(
-                      iconData: Icons.remove, // Ícone de remover
-                      color: cartProduct.quantity >
-                              1 // Verifica se a quantidade é maior que 1
-                          ? Colors.green
-                          : Colors.red, // Define a cor do ícone
-                      onTap: cartProduct.decrement, // Função ao clicar
-                    ),
-                  ],
-                );
-              }),
+                      Text(
+                        "${cartProduct.quantity} ", // Exibe a quantidade
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500, // Define o peso da fonte
+                          fontSize: 20, // Define o tamanho da fonte
+                          color: Colors.black, // Define a cor do texto
+                        ),
+                      ),
+                      CustomIconButton(
+                        iconData: Icons.remove, // Ícone de remover
+                        color: cartProduct.quantity > 1
+                            ? Colors
+                                .green // Define a cor do ícone se a quantidade for maior que 1
+                            : Colors
+                                .red, // Define a cor do ícone se a quantidade for 1 ou menor
+                        onTap: cartProduct.decrement, // Função ao clicar
+                      ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),

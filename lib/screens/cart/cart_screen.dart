@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart'; // Import the Flutter library
-import 'package:online_store/common/custom_drawer/minhas_cores.dart';
-import 'package:online_store/common/price_card.dart'; // Import the PriceCard widget
-import 'package:provider/provider.dart'; // Import the Provider package
-import 'package:online_store/models/cart_manager.dart'; // Import the CartManager
-import 'package:online_store/screens/cart/components/cart_tile.dart'; // Import the CartTile widget
+import 'package:flutter/material.dart'; // Importa o Flutter para construir a interface do usuário
+import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa o arquivo de cores personalizadas
+import 'package:online_store/common/price_card.dart'; // Importa o PriceCard widget
+import 'package:provider/provider.dart'; // Importa o pacote Provider para gerenciamento de estado
+import 'package:online_store/models/cart_manager.dart'; // Importa o CartManager
+import 'package:online_store/screens/cart/components/cart_tile.dart'; // Importa o CartTile widget
 
+// Classe CartScreen que estende StatelessWidget
 class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Override the build method
+    // Método build que cria a interface do usuário
     return Scaffold(
       backgroundColor: MinhasCores.rosa_1, // Define a cor de fundo do Scaffold
       appBar: AppBar(
@@ -16,12 +17,14 @@ class CartScreen extends StatelessWidget {
           children: const [
             Text(
               'Pandora Fashion', // Título da AppBar
-              style: TextStyle(color: Colors.white),
+              style:
+                  TextStyle(color: Colors.white), // Estilo do texto do título
             ),
           ],
         ),
         centerTitle: true, // Centraliza o título
-        backgroundColor: Colors.transparent, // Define a cor de fundo da AppBar
+        backgroundColor: Colors
+            .transparent, // Define a cor de fundo da AppBar como transparente
         elevation: 0, // Remove a sombra da AppBar
         toolbarHeight: 80.0, // Define a altura da AppBar
         shape: const RoundedRectangleBorder(
@@ -31,8 +34,8 @@ class CartScreen extends StatelessWidget {
         ),
       ),
       body: Consumer<CartManager>(
+        // Consumer para obter o CartManager
         builder: (_, cartManager, __) {
-          // Consumer para obter o CartManager
           return ListView(
             children: <Widget>[
               Column(
@@ -41,12 +44,13 @@ class CartScreen extends StatelessWidget {
                     .toList(), // Mapeia os itens do carrinho para o CartTile
               ),
               PriceCard(
-                buttonText: 'Continuar para a Entrega',
+                buttonText: 'Continuar para a Entrega', // Texto do botão
                 onPressed: cartManager.isCartValid
                     ? () {
-                        Navigator.of(context).pushNamed('/address');
+                        Navigator.of(context).pushNamed(
+                            '/address'); // Navega para a página de endereço se o carrinho for válido
                       }
-                    : null, // Define o botão de acordo com a validade do carrinho
+                    : null, // Define o botão como nulo se o carrinho não for válido
               ), // Exibe o PriceCard
             ],
           );

@@ -10,19 +10,23 @@ class CustomDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Container com uma decoração de fundo gradiente
       decoration: const BoxDecoration(
-        // Define um fundo gradiente para o container
         gradient: LinearGradient(
           colors: [
-            MinhasCores.rosa_1,
-            MinhasCores.rosa_2
-          ], // Cores do gradiente
+            MinhasCores.rosa_1, // Cor do gradiente (rosa 1)
+            MinhasCores.rosa_2, // Cor do gradiente (rosa 2)
+          ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
       ),
       padding: const EdgeInsets.fromLTRB(
-          32, 24, 16, 8), // Define o padding do container
+        32,
+        24,
+        16,
+        8,
+      ), // Define o padding do container
       height: 290, // Define a altura do container
       child: Stack(
         children: <Widget>[

@@ -17,9 +17,9 @@ class CustomDrawer extends StatelessWidget {
           // Define um fundo gradiente para o container do drawer
           gradient: LinearGradient(
             colors: [
-              MinhasCores.rosa_2,
-              MinhasCores.rosa_2
-            ], // Cores do gradiente
+              MinhasCores.rosa_2, // Cor do gradiente (rosa 2)
+              MinhasCores.rosa_2, // Cor do gradiente (rosa 2)
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

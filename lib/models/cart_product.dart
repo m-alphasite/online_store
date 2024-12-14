@@ -34,9 +34,9 @@ class CartProduct extends ChangeNotifier {
       sizes: [],
     );
 
+    // Obtém o produto do Firestore e converte para Product
     firestore.doc('products/$productId').get().then((doc) {
-      product = Product.fromDocument(
-          doc); // Obtém o produto do Firestore e converte para Product
+      product = Product.fromDocument(doc);
       notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
     });
   }

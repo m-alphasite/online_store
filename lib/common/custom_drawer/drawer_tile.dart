@@ -17,15 +17,13 @@ class DrawerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int curPage = context
-        .watch<PageManager>()
-        .page; // Observa a página atual gerenciada por PageManager
+    // Observa a página atual gerenciada por PageManager
+    final int curPage = context.watch<PageManager>().page;
 
     return InkWell(
       onTap: () {
-        context
-            .read<PageManager>()
-            .setPage(page); // Define a página atual quando o tile é clicado
+        // Define a página atual quando o tile é clicado
+        context.read<PageManager>().setPage(page);
       },
       child: SizedBox(
         height: 60, // Define a altura do tile
@@ -33,7 +31,9 @@ class DrawerTile extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: 32, vertical: 16), // Define o padding do ícone
+                horizontal: 32,
+                vertical: 16,
+              ), // Define o padding do ícone
               child: Icon(
                 icon, // Ícone do tile
                 size: 32, // Tamanho do ícone
