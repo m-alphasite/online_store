@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart'; // Importa o pacote Flutter para construir a interface do usuário
 import 'package:online_store/common/custom_drawer/custom_drawer_header.dart'; // Importa o cabeçalho personalizado do drawer
 import 'package:online_store/common/custom_drawer/drawer_tile.dart'; // Importa os tiles do drawer
-import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa as cores personalizadas
+import 'package:online_store/common/custom_drawer/minhas_cores.dart';
+import 'package:online_store/models/user_manager.dart';
+import 'package:provider/provider.dart'; // Importa as cores personalizadas
 
 // Classe CustomDrawer que estende StatelessWidget para criar um drawer personalizado
 class CustomDrawer extends StatelessWidget {
@@ -47,6 +49,29 @@ class CustomDrawer extends StatelessWidget {
               title: 'Lojas',
               page: 3,
             ), // Adiciona um tile para a página de lojas
+            Consumer<UserManager>(
+              builder: (_, userManager, __) {
+                if (userManager.adminEnabled) {
+                  return Column(
+                    children: [
+                      Divider(),
+                      DrawerTile(
+                        icon: Icons.settings,
+                        title: 'Usuários',
+                        page: 4,
+                      ),
+                      DrawerTile(
+                        icon: Icons.settings,
+                        title: 'Pedidos',
+                        page: 4,
+                      ), // Adiciona um tile para a página de admin
+                    ],
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ],
         ),
       ),

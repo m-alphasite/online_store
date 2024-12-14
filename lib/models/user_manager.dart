@@ -47,25 +47,25 @@ class UserManager extends ChangeNotifier {
         name: '',
       ); // Cria um objeto User com os dados do usuário logado
 
-      if (_user != null) {
-        final DocumentSnapshot doc = await firestore
-            .collection('users')
-            .doc(_user!.id)
-            .get(); // Busca os dados do usuário no Firestore
+      final DocumentSnapshot doc = await firestore
+          .collection('users')
+          .doc(_user!.id)
+          .get(); // Busca os dados do usuário no Firestore
 
-        if (doc.exists) {
-          _user = user_model.User.fromSnapshot(
-              doc); // Atualiza o objeto User com os dados do Firestore
-          onSuccess(result.user!); // Chama a função de sucesso
-        } else {
-          onFail(
-              'Usuário não encontrado no banco de dados.'); // Chama a função de falha se o usuário não for encontrado
-        }
+      if (doc.exists) {
+        _user = user_model.User.fromSnapshot(
+            doc); // Atualiza o objeto User com os dados do Firestore
+        _checkAdminStatus(result.user!); // Verifica e exibe o status de admin
+        onSuccess(result.user!); // Chama a função de sucesso
+      } else {
+        onFail(
+            'Usuário não encontrado no banco de dados.'); // Chama a função de falha se o usuário não for encontrado
       }
     } on FirebaseAuthException catch (e) {
       onFail(getErrorString(e.code)); // Trata erros de autenticação
     } finally {
       loading = false; // Define o estado de carregamento como falso
+      notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
     }
   }
 
@@ -92,14 +92,14 @@ class UserManager extends ChangeNotifier {
         name: name,
       ); // Cria um objeto User com os dados do novo usuário
 
-      if (_user != null) {
-        await _user!.saveData(); // Salva os dados do usuário no Firestore
-        onSuccess(result.user!); // Chama a função de sucesso
-      }
+      await _user!.saveData(); // Salva os dados do usuário no Firestore
+      _checkAdminStatus(result.user!); // Verifica e exibe o status de admin
+      onSuccess(result.user!); // Chama a função de sucesso
     } on FirebaseAuthException catch (e) {
       onFail(getErrorString(e.code)); // Trata erros de autenticação
     } finally {
       loading = false; // Define o estado de carregamento como falso
+      notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
     }
   }
 
@@ -118,23 +118,31 @@ class UserManager extends ChangeNotifier {
 
   // Método para carregar o usuário atual
   Future<void> _loadCurrentUser() async {
-    auth.authStateChanges().listen(
-      (user) async {
-        if (user != null) {
-          final DocumentSnapshot doc = await firestore
-              .collection('users')
-              .doc(user.uid)
-              .get(); // Busca os dados do usuário no Firestore
+    final User? currentUser = auth.currentUser;
+    if (currentUser != null) {
+      final DocumentSnapshot doc = await firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .get(); // Busca os dados do usuário no Firestore
 
-          if (doc.exists) {
-            _user = user_model.User.fromSnapshot(
-                doc); // Atualiza o objeto User com os dados do Firestore
-          } else {
-            _user = null; // Define o usuário atual como null se não encontrado
-            notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
-          }
-        }
-      },
-    );
+      if (doc.exists) {
+        _user = user_model.User.fromSnapshot(
+            doc); // Atualiza o objeto User com os dados do Firestore
+        _checkAdminStatus(currentUser); // Verifica e exibe o status de admin
+        notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
+      }
+    }
   }
+
+  // Método para verificar e exibir o status de administrador
+  Future<void> _checkAdminStatus(User user) async {
+    final docAdmin = await firestore.collection('admins').doc(user.uid).get();
+    if (docAdmin.exists) {
+      _user!.admin =
+          true; // Define o usuário como admin se encontrado na coleção de admins
+    }
+    notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
+  }
+
+  bool get adminEnabled => user != null && user!.admin;
 }

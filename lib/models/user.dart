@@ -10,15 +10,20 @@ class User {
     required this.name, // Nome do usuário
     this.confirmPassword =
         '', // Inicializa o campo confirmPassword com uma string vazia
+    this.admin = false, // Inicializa o campo admin com false
   });
 
   // Factory para criar um objeto User a partir de um snapshot do Firestore
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
     return User(
       id: snapshot.id, // Obtém o ID do snapshot
-      email: snapshot['email'], // Obtém o email do snapshot
-      name: snapshot['name'], // Obtém o nome do snapshot
+      email: data['email'] as String, // Obtém o email do snapshot
+      name: data['name'] as String, // Obtém o nome do snapshot
       password: '', // Inicializa a senha com uma string vazia
+      admin: data.containsKey('admin')
+          ? data['admin'] as bool
+          : false, // Verifica se o campo admin existe e o obtém, caso contrário inicializa com false
     );
   }
 
@@ -27,6 +32,7 @@ class User {
   String email; // Email do usuário
   String password; // Senha do usuário
   String confirmPassword; // Confirmação da senha
+  bool admin; // Indica se o usuário é admin
 
   // Referência ao documento Firestore do usuário
   DocumentReference get firestoreRef =>
@@ -38,7 +44,7 @@ class User {
   // Método para salvar os dados do usuário no Firestore
   Future<void> saveData() async {
     try {
-      await FirebaseFirestore.instance.doc("users/$id").set(toMap());
+      await firestoreRef.set(toMap());
     } catch (e) {
       debugPrint(
           'Error saving user data: $e'); // Imprime uma mensagem de erro se a operação falhar
@@ -50,6 +56,7 @@ class User {
     return {
       'name': name, // Adiciona o nome ao mapa
       'email': email, // Adiciona o email ao mapa
+      'admin': admin, // Adiciona o status de admin ao mapa
     };
   }
 
