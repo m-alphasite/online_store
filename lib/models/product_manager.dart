@@ -37,21 +37,26 @@ class ProductManager extends ChangeNotifier {
 
   // Método para carregar todos os produtos do Firestore
   Future<void> _loadAllProducts() async {
-    final QuerySnapshot snapProduct = await firestore
-        .collection('products')
-        .get(); // Consulta a coleção de produtos
+    try {
+      final QuerySnapshot snapProduct = await firestore
+          .collection('products')
+          .get(); // Consulta a coleção de produtos
 
-    allProducts = snapProduct.docs
-        .map((doc) => Product.fromDocument(doc))
-        .toList(); // Mapeia os documentos para objetos Product
+      allProducts = snapProduct.docs
+          .map((doc) => Product.fromDocument(doc))
+          .toList(); // Mapeia os documentos para objetos Product
 
-    notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
+      notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
+    } catch (e) {
+      // Tratar qualquer erro que possa ocorrer durante a consulta ao Firestore
+      print("Erro ao carregar produtos: $e");
+    }
   }
 
+  // Função para encontrar um produto pelo ID
   Product? findProductById(String id) {
     try {
-      return allProducts
-          .firstWhere((p) => p.id == id); // Busca o produto pelo id
+      return allProducts.firstWhere((product) => product.id == id);
     } catch (e) {
       return null; // Retorna null se o produto não for encontrado
     }

@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart'; // Importa o pacote Flutter para construção de interfaces
-import 'package:online_store/common/custom_drawer/custom_drawer.dart'; // Importa o drawer personalizado
-import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa as cores personalizadas
-import 'package:online_store/models/product_manager.dart'; // Importa o gerenciador de produtos
-import 'package:online_store/screens/product/components/product_list_tile.dart'; // Importa o componente de lista de produtos
-import 'package:online_store/screens/product/components/search_dialog.dart'; // Importa o componente de diálogo de busca
-import 'package:provider/provider.dart'; // Importa o pacote provider para gerenciamento de estado
+import 'package:flutter/material.dart'; // Import the Flutter library
+import 'package:online_store/common/custom_drawer/custom_drawer.dart'; // Import the CustomDrawer widget
+import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Import the MinhasCores widget
+import 'package:online_store/models/product_manager.dart'; // Import the ProductManager model
+import 'package:online_store/screens/product/components/product_list_tile.dart'; // Import the ProductListTile widget
+import 'package:online_store/screens/product/components/search_dialog.dart'; // Import the SearchDialog widget
+import 'package:provider/provider.dart'; // Import the Provider library
 
-// Classe ProductsScreen que estende StatefulWidget para criar a tela de produtos
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
 

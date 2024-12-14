@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart'; // Importa o pacote Flutter para construção de interfaces
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'; // Importa o pacote Staggered Grid View
 import 'package:online_store/models/section.dart'; // Importa o modelo Section
+import 'package:online_store/screens/home/components/item_tile.dart';
 import 'package:online_store/screens/home/components/section_header.dart'; // Importa o componente SectionHeader
 
 // Classe SectionStaggered que estende StatelessWidget para criar um layout em grade
@@ -31,23 +32,8 @@ class SectionStaggered extends StatelessWidget {
             crossAxisCount: 2, // Define o número de colunas
             itemCount:
                 section.items.length, // Define o número de itens na grade
-            itemBuilder: (BuildContext context, int index) => Image.network(
-              section.items[index].image, // Carrega a imagem do item da seção
-              fit: BoxFit.cover, // Cobre todo o espaço disponível
-              errorBuilder: (context, error, stackTrace) {
-                // Tratamento de erro aprimorado
-                return Container(
-                  color: Colors.grey,
-                  child: const Center(
-                    child: Icon(Icons.error, color: Colors.red),
-                  ),
-                );
-              },
-              loadingBuilder: (context, child, loadingProgress) {
-                // Indicador de carregamento
-                if (loadingProgress == null) return child;
-                return const Center(child: CircularProgressIndicator());
-              },
+            itemBuilder: (_, index) => ItemTile(
+              section.items[index], // Carrega os itens da seção
             ),
             mainAxisSpacing:
                 4.0, // Espaçamento entre os itens na direção principal

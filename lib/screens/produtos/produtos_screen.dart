@@ -41,9 +41,14 @@ class _ProdutosScreenState extends State<ProdutosScreen> {
           title: Text(
             widget.product
                 .name, // Define o título da AppBar como o nome do produto
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ), // Estilo do título
           ),
           centerTitle: true, // Centraliza o título
+          backgroundColor: MinhasCores.rosa_1, // Cor de fundo da AppBar
         ),
         body: SingleChildScrollView(
           child: Padding(

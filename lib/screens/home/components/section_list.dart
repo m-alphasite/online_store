@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart'; // Importa o pacote Flutter para construção de interfaces
 import 'package:online_store/models/section.dart'; // Importa o modelo Section
+import 'package:online_store/screens/home/components/item_tile.dart';
 import 'package:online_store/screens/home/components/section_header.dart'; // Importa o componente SectionHeader
 
 // Classe SectionList que estende StatelessWidget para criar uma lista de seção
@@ -28,15 +29,8 @@ class SectionList extends StatelessWidget {
               scrollDirection: Axis
                   .horizontal, // Define a direção de rolagem como horizontal
               itemBuilder: (_, index) {
-                return AspectRatio(
-                  aspectRatio: 1.0, // Mantém a proporção 1:1 para a imagem
-                  child: Image.network(
-                    section.items[index]
-                        .image, // Carrega a imagem do item da seção
-                    fit: BoxFit.cover, // Cobre todo o espaço disponível
-                  ),
-                );
-              },
+                return ItemTile(section.items[index]);
+              }, // Cria um ItemTile para cada item na seção
               separatorBuilder: (_, __) => const SizedBox(
                   width: 4), // Define o espaçamento entre os itens da lista
               itemCount:
