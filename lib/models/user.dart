@@ -21,9 +21,8 @@ class User {
       email: data['email'] as String, // Obtém o email do snapshot
       name: data['name'] as String, // Obtém o nome do snapshot
       password: '', // Inicializa a senha com uma string vazia
-      admin: data.containsKey('admin')
-          ? data['admin'] as bool
-          : false, // Verifica se o campo admin existe e o obtém, caso contrário inicializa com false
+      admin: data['admin'] ??
+          false, // Verifica se o campo admin existe e o obtém, caso contrário inicializa com false
     );
   }
 

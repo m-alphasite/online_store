@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_unnecessary_containers
-
 import 'package:flutter/material.dart'; // Importa o pacote Flutter para construir a interface do usuário
 import 'package:online_store/common/custom_drawer/custom_drawer_header.dart'; // Importa o cabeçalho personalizado do drawer
 import 'package:online_store/common/custom_drawer/drawer_tile.dart'; // Importa os tiles do drawer
@@ -56,14 +54,14 @@ class CustomDrawer extends StatelessWidget {
                     children: [
                       Divider(),
                       DrawerTile(
-                        icon: Icons.settings,
+                        icon: Icons.people,
                         title: 'Usuários',
-                        page: 4,
+                        page: 4, // Definindo página diferente para cada tile
                       ),
                       DrawerTile(
-                        icon: Icons.settings,
+                        icon: Icons.list_alt,
                         title: 'Pedidos',
-                        page: 4,
+                        page: 5, // Definindo página diferente para cada tile
                       ), // Adiciona um tile para a página de admin
                     ],
                   );

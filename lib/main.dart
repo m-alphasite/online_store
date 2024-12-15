@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart'; // Importa o pacote Firebase 
 import 'package:flutter/material.dart'; // Importa o Flutter para construir a interface do usuário
 import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa o arquivo de cores personalizadas
 import 'package:online_store/firebase_options.dart'; // Importa as opções de configuração do Firebase
+import 'package:online_store/models/admin_users_manager.dart'; // Importa o gerenciador de usuários admins
 import 'package:online_store/models/cart_manager.dart'; // Importa o gerenciador de carrinho
 import 'package:online_store/models/home_manager.dart'; // Importa o gerenciador de home
 import 'package:online_store/models/product.dart'; // Importa o modelo de produto
@@ -59,6 +60,15 @@ class MyApp extends StatelessWidget {
               false, // Garante que o gerenciador de carrinho seja criado imediatamente
           update: (_, userManager, cartManager) => cartManager!
             ..updateUser(userManager), // Atualiza o gerenciador de carrinho
+        ),
+        ChangeNotifierProxyProvider<UserManager, AdminUsersManager>(
+          create: (_) =>
+              AdminUsersManager(), // Cria uma instância do gerenciador de usuários admins
+          lazy:
+              false, // Garante que o gerenciador de usuários seja criado imediatamente
+          update: (_, userManager, adminUsersManager) => adminUsersManager!
+            ..updateUser(
+                userManager), // Atualiza o gerenciador de usuários admins
         ),
         ChangeNotifierProvider(
           create: (_) => PageManager(

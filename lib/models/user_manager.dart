@@ -55,7 +55,8 @@ class UserManager extends ChangeNotifier {
       if (doc.exists) {
         _user = user_model.User.fromSnapshot(
             doc); // Atualiza o objeto User com os dados do Firestore
-        _checkAdminStatus(result.user!); // Verifica e exibe o status de admin
+        await _checkAdminStatus(
+            result.user!); // Verifica e exibe o status de admin
         onSuccess(result.user!); // Chama a função de sucesso
       } else {
         onFail(
@@ -93,7 +94,8 @@ class UserManager extends ChangeNotifier {
       ); // Cria um objeto User com os dados do novo usuário
 
       await _user!.saveData(); // Salva os dados do usuário no Firestore
-      _checkAdminStatus(result.user!); // Verifica e exibe o status de admin
+      await _checkAdminStatus(
+          result.user!); // Verifica e exibe o status de admin
       onSuccess(result.user!); // Chama a função de sucesso
     } on FirebaseAuthException catch (e) {
       onFail(getErrorString(e.code)); // Trata erros de autenticação
@@ -128,7 +130,8 @@ class UserManager extends ChangeNotifier {
       if (doc.exists) {
         _user = user_model.User.fromSnapshot(
             doc); // Atualiza o objeto User com os dados do Firestore
-        _checkAdminStatus(currentUser); // Verifica e exibe o status de admin
+        await _checkAdminStatus(
+            currentUser); // Verifica e exibe o status de admin
         notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
       }
     }
