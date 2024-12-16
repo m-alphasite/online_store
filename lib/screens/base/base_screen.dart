@@ -25,22 +25,100 @@ class BaseScreen extends StatelessWidget {
           List<Widget> screens = [
             HomeScreen(), // Tela inicial
             ProductsScreen(), // Tela de produtos
+            if (!(userManager.user?.admin ?? false))
+              Scaffold(
+                backgroundColor: MinhasCores.rosa_1,
+                drawer: const CustomDrawer(),
+                appBar: AppBar(
+                  centerTitle: true,
+                  toolbarHeight: 80.0,
+                  elevation: 0,
+                  leading: Builder(
+                    builder: (context) {
+                      return IconButton(
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                        ), // Ícone de menu
+                        onPressed: () => Scaffold.of(context)
+                            .openDrawer(), // Abre o drawer ao clicar no ícone de menu
+                      );
+                    },
+                  ),
+                  title: const Text(
+                    'Meus Pedidos',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             Scaffold(
+              backgroundColor: MinhasCores.rosa_1,
               drawer: const CustomDrawer(),
               appBar: AppBar(
-                title: const Text('MeusPedidos'),
+                title: const Text(
+                  'Lojas',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                leading: Builder(
+                  builder: (context) {
+                    return IconButton(
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ), // Ícone de menu
+                      onPressed: () => Scaffold.of(context)
+                          .openDrawer(), // Abre o drawer ao clicar no ícone de menu
+                    );
+                  },
+                ),
+                centerTitle: true,
+                backgroundColor: MinhasCores.rosa_1,
+                elevation: 0, // Remove a sombra da AppBar
+                toolbarHeight: 80.0, // Define a altura da AppBar
               ),
             ),
-            Scaffold(
-              drawer: const CustomDrawer(),
-              appBar: AppBar(
-                title: const Text('Lojas'),
+            if (userManager.user?.admin ?? false)
+              Scaffold(
+                drawer: const CustomDrawer(),
+                appBar: AppBar(
+                  backgroundColor: MinhasCores.rosa_1,
+                  elevation: 0, // Remove a sombra da AppBar
+                  toolbarHeight: 80.0, // Define a altura da AppBar
+                  centerTitle: true,
+                  leading: Builder(
+                    builder: (context) {
+                      return IconButton(
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                        ), // Ícone de menu
+                        onPressed: () => Scaffold.of(context)
+                            .openDrawer(), // Abre o drawer ao clicar no ícone de menu
+                      );
+                    },
+                  ),
+                  title: const Text(
+                    'Usuários',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                body: const UsuariosScreen(),
               ),
-            ),
-          ];
-
-          if (userManager.user?.admin ?? false) {
-            screens.addAll([
+            if (userManager.user?.admin ?? false)
               Scaffold(
                 drawer: const CustomDrawer(),
                 appBar: AppBar(
@@ -55,45 +133,18 @@ class BaseScreen extends StatelessWidget {
                     },
                   ),
                   title: const Text(
-                    'Usuários',
+                    'Pedidos',
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  toolbarHeight: 90.0, // Define a altura da AppBar
+                  toolbarHeight: 0.0, // Define a altura da AppBar
                 ),
-                body: const UsuariosScreen(),
+                body: const PedidosScreen(),
               ),
-              if (!(userManager.user?.admin ?? false))
-                Scaffold(
-                  drawer: const CustomDrawer(),
-                  appBar: AppBar(
-                    centerTitle: true,
-                    leading: Builder(
-                      builder: (context) {
-                        return IconButton(
-                          icon: const Icon(Icons.menu), // Ícone de menu
-                          onPressed: () => Scaffold.of(context)
-                              .openDrawer(), // Abre o drawer ao clicar no ícone de menu
-                        );
-                      },
-                    ),
-                    title: const Text(
-                      'Pedidos',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    toolbarHeight: 90.0, // Define a altura da AppBar
-                  ),
-                  body: const PedidosScreen(),
-                ),
-            ]);
-          }
+          ];
 
           return Scaffold(
             body: PageView(
@@ -120,15 +171,6 @@ class BaseScreen extends StatelessWidget {
                   icon: Icon(Icons.shopping_bag),
                   label: 'Produtos',
                 ),
-                if (!(userManager.user?.admin ?? false))
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.list),
-                    label: 'Meus Pedidos',
-                  ),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.location_on),
-                  label: 'Lojas',
-                ),
                 if (userManager.user?.admin ?? false) ...[
                   const BottomNavigationBarItem(
                     icon: Icon(Icons.people),
@@ -138,7 +180,16 @@ class BaseScreen extends StatelessWidget {
                     icon: Icon(Icons.list_alt),
                     label: 'Pedidos',
                   ),
+                ] else ...[
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.list),
+                    label: 'Meus Pedidos',
+                  ),
                 ],
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.location_on),
+                  label: 'Lojas',
+                ),
               ],
             ),
           );
