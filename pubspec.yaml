@@ -49,17 +49,17 @@ dependencies:
   transparent_image: ^2.0.1
   alphabet_list_scroll_view: ^2.0.0
   faker: ^2.2.0
-  
   flutter_launcher_icons: ^0.14.2
   flutter_native_splash: ^2.4.3
  
   
 
 flutter_native_splash:
-  color: "0xFFFF31AD"
-  image: "assets/images/image(2).png"
+  color: "#ffffff"
+  image: "assets/images/image_3.png"
   android: true
   ios: true
+
 
 
 dev_dependencies:
