@@ -37,11 +37,12 @@ class CustomDrawer extends StatelessWidget {
               title: 'Produtos',
               page: 1,
             ), // Adiciona um tile para a página de produtos
-            DrawerTile(
-              icon: Icons.playlist_add_check,
-              title: 'Meus Pedidos',
-              page: 2,
-            ), // Adiciona um tile para a página de pedidos
+            if (!(context.watch<UserManager>().adminEnabled))
+              DrawerTile(
+                icon: Icons.playlist_add_check,
+                title: 'Meus Pedidos',
+                page: 2,
+              ), // Adiciona um tile para a página de pedidos
             DrawerTile(
               icon: Icons.location_on,
               title: 'Lojas',
@@ -56,13 +57,13 @@ class CustomDrawer extends StatelessWidget {
                       DrawerTile(
                         icon: Icons.people,
                         title: 'Usuários',
-                        page: 4, // Definindo página diferente para cada tile
+                        page: 4, // Página de usuários
                       ),
                       DrawerTile(
                         icon: Icons.list_alt,
                         title: 'Pedidos',
-                        page: 5, // Definindo página diferente para cada tile
-                      ), // Adiciona um tile para a página de admin
+                        page: 5, // Página de pedidos
+                      ),
                     ],
                   );
                 } else {

@@ -23,6 +23,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               MinhasCores.rosa_1, // Define a cor de fundo do Scaffold
           drawer: const CustomDrawer(), // Adiciona o drawer personalizado
           appBar: AppBar(
+            elevation: 0, // Remove a sombra da AppBar
+            toolbarHeight: 80.0, // Define a altura da AppBar
             leading: Builder(
               builder: (context) {
                 return IconButton(
@@ -38,10 +40,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 if (productManager.search == null ||
                     productManager.search!.isEmpty) {
                   return const Text(
-                    "Produtos\nCamisetas", // Título da AppBar
+                    "Pandora Fashion\nProdutos: Camisetas", // Título da AppBar
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 25,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -71,8 +73,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             centerTitle: true, // Centraliza o título
             backgroundColor:
                 MinhasCores.rosa_1, // Define a cor de fundo da AppBar
-            elevation: 0, // Remove a sombra da AppBar
-            toolbarHeight: 90.0, // Define a altura da AppBar
+            // Define a altura da AppBar
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 bottom:

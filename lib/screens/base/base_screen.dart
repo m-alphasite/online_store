@@ -28,7 +28,7 @@ class BaseScreen extends StatelessWidget {
             Scaffold(
               drawer: const CustomDrawer(),
               appBar: AppBar(
-                title: const Text('MeusPedidos'),
+                title: const Text('Meus Pedidos'),
               ),
             ),
             Scaffold(
@@ -44,6 +44,37 @@ class BaseScreen extends StatelessWidget {
               Scaffold(
                 drawer: const CustomDrawer(),
                 appBar: AppBar(
+                  backgroundColor: MinhasCores.rosa_1,
+                  elevation: 0, // Remove a sombra da AppBar
+                  toolbarHeight: 80.0, // Define a altura da AppBar
+                  centerTitle: true,
+                  leading: Builder(
+                    builder: (context) {
+                      return IconButton(
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                        ), // Ícone de menu
+                        onPressed: () => Scaffold.of(context)
+                            .openDrawer(), // Abre o drawer ao clicar no ícone de menu
+                      );
+                    },
+                  ),
+                  title: const Text(
+                    'Usuários',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                body: const UsuariosScreen(),
+              ),
+              Scaffold(
+                drawer: const CustomDrawer(),
+                appBar: AppBar(
                   centerTitle: true,
                   leading: Builder(
                     builder: (context) {
@@ -55,7 +86,7 @@ class BaseScreen extends StatelessWidget {
                     },
                   ),
                   title: const Text(
-                    'Usuários',
+                    'Pedidos',
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -64,34 +95,8 @@ class BaseScreen extends StatelessWidget {
                   ),
                   toolbarHeight: 90.0, // Define a altura da AppBar
                 ),
-                body: const UsuariosScreen(),
+                body: const PedidosScreen(),
               ),
-              if (!(userManager.user?.admin ?? false))
-                Scaffold(
-                  drawer: const CustomDrawer(),
-                  appBar: AppBar(
-                    centerTitle: true,
-                    leading: Builder(
-                      builder: (context) {
-                        return IconButton(
-                          icon: const Icon(Icons.menu), // Ícone de menu
-                          onPressed: () => Scaffold.of(context)
-                              .openDrawer(), // Abre o drawer ao clicar no ícone de menu
-                        );
-                      },
-                    ),
-                    title: const Text(
-                      'Pedidos',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    toolbarHeight: 90.0, // Define a altura da AppBar
-                  ),
-                  body: const PedidosScreen(),
-                ),
             ]);
           }
 
@@ -120,15 +125,6 @@ class BaseScreen extends StatelessWidget {
                   icon: Icon(Icons.shopping_bag),
                   label: 'Produtos',
                 ),
-                if (!(userManager.user?.admin ?? false))
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.list),
-                    label: 'Meus Pedidos',
-                  ),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.location_on),
-                  label: 'Lojas',
-                ),
                 if (userManager.user?.admin ?? false) ...[
                   const BottomNavigationBarItem(
                     icon: Icon(Icons.people),
@@ -138,7 +134,16 @@ class BaseScreen extends StatelessWidget {
                     icon: Icon(Icons.list_alt),
                     label: 'Pedidos',
                   ),
+                ] else ...[
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.list),
+                    label: 'Meus Pedidos',
+                  ),
                 ],
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.location_on),
+                  label: 'Lojas',
+                ),
               ],
             ),
           );

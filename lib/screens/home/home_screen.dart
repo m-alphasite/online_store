@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
             floating: true, // Faz a AppBar flutuar
             pinned: true, // Fixa a AppBar no topo
             elevation: 0, // Remove a sombra da AppBar
-            toolbarHeight: 70.0, // Define a altura da AppBar
+            toolbarHeight: 80.0, // Define a altura da AppBar
             iconTheme: const IconThemeData(
                 color: Colors.white), // Define a cor dos ícones como branco
             actions: [
@@ -37,7 +37,11 @@ class HomeScreen extends StatelessWidget {
             flexibleSpace: const FlexibleSpaceBar(
               title: Text(
                 'Pandora Fashion', // Título da AppBar
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               centerTitle: true, // Centraliza o título
             ),
