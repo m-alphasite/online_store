@@ -54,11 +54,6 @@ dependencies:
  
   
 
-flutter_native_splash:
-  color: "#ffffff"
-  image: "assets/images/image_3.png"
-  android: true
-  ios: true
 
 
 
