@@ -3,7 +3,7 @@ import 'package:flutter/material.dart'; // Importa o pacote Flutter para constru
 import 'package:online_store/models/user_manager.dart'; // Importa o gerenciador de usuários
 
 class AdminUsersManager extends ChangeNotifier {
-  List<Map<String, String>> _adminUsers = [];
+  final List<Map<String, String>> _adminUsers = [];
 
   List<Map<String, String>> get adminUsers => _adminUsers;
 

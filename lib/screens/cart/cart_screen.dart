@@ -7,6 +7,8 @@ import 'package:online_store/screens/cart/components/cart_tile.dart'; // Importa
 
 // Classe CartScreen que estende StatelessWidget
 class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Método build que cria a interface do usuário

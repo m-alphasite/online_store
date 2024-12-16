@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
               CartManager(), // Cria uma instância do gerenciador de carrinho
           lazy:
               false, // Garante que o gerenciador de carrinho seja criado imediatamente
-          update: (_, userManager, cartManager) => cartManager!
+          update: (_, userManager, cartManager) => cartManager
             ..updateUser(userManager), // Atualiza o gerenciador de carrinho
         ),
         ChangeNotifierProxyProvider<UserManager, AdminUsersManager>(
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
               AdminUsersManager(), // Cria uma instância do gerenciador de usuários admins
           lazy:
               false, // Garante que o gerenciador de usuários seja criado imediatamente
-          update: (_, userManager, adminUsersManager) => adminUsersManager!
+          update: (_, userManager, adminUsersManager) => adminUsersManager
             ..updateUser(
                 userManager), // Atualiza o gerenciador de usuários admins
         ),

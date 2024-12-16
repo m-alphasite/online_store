@@ -14,7 +14,7 @@ getAuthenticationInputDecoration(String label, {Icon? icon}) {
       // Define a borda do InputDecoration quando o campo está desabilitado
       borderRadius: BorderRadius.circular(12), // Define a forma da borda
       borderSide: const BorderSide(
-          color: Color(0xFFFC90048),
+          color: Color(0xfffc90048),
           width: 2.0), // Define a cor e largura da borda
     ),
     focusedBorder: OutlineInputBorder(

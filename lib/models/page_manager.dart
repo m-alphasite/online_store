@@ -16,8 +16,9 @@ class PageManager extends ChangeNotifier {
   }) {
     if (_pageController.hasClients) {
       // Verifica se o controlador está anexado a alguma visualização de rolagem
-      if (value == page)
+      if (value == page) {
         return; // Se a página atual for igual à página desejada, não faz nada
+      }
 
       page = value; // Atualiza a página atual
       _pageController.animateToPage(

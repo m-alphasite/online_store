@@ -183,8 +183,7 @@ class _ProdutosScreenState extends State<ProdutosScreen> {
                       // Verifica se há estoque disponível para o produto
                       return ElevatedButton.icon(
                         // Desabilita o botão se nenhum tamanho estiver selecionado ou se não houver estoque
-                        onPressed: widget.product.selectedSize != null &&
-                                product.hasStock
+                        onPressed: product.hasStock
                             ? () {
                                 if (userManager.isLoggedIn) {
                                   // Adiciona o produto ao carrinho
