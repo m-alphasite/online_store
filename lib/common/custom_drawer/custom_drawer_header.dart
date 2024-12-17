@@ -84,7 +84,7 @@ class CustomDrawerHeader extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple, // Cor do texto
+                        color: MinhasCores.rosa_3, // Cor do texto
                       ),
                     ),
                   ),

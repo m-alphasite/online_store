@@ -168,7 +168,7 @@ class BaseScreen extends StatelessWidget {
                   Icon(Icons.people, size: 30, color: Colors.white),
                   Icon(Icons.list_alt, size: 30, color: Colors.white),
                 ] else ...[
-                  Icon(Icons.list, size: 30.0, color: Colors.white),
+                  Icon(Icons.list, size: 30, color: Colors.white),
                 ],
                 Icon(Icons.location_on, size: 30, color: Colors.white),
               ],

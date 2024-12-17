@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; // Importa o pacote Flutter para construir a interface do usuário
+import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa o arquivo de cores personalizadas
 import 'package:online_store/models/page_manager.dart'; // Importa o gerenciador de páginas
 import 'package:provider/provider.dart'; // Importa o pacote provider para gerenciar o estado
 
@@ -38,8 +39,8 @@ class DrawerTile extends StatelessWidget {
                 icon, // Ícone do tile
                 size: 32, // Tamanho do ícone
                 color: curPage == page
-                    ? const Color.fromARGB(255, 120, 3,
-                        216) // Cor do ícone se estiver na página atual
+                    ? MinhasCores
+                        .rosa_3 // Cor do ícone se estiver na página atual
                     : const Color.fromARGB(255, 255, 255,
                         255), // Cor do ícone se não estiver na página atual
               ),
@@ -49,8 +50,8 @@ class DrawerTile extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16, // Tamanho do texto
                 color: curPage == page
-                    ? const Color.fromARGB(255, 100, 5,
-                        189) // Cor do texto se estiver na página atual
+                    ? MinhasCores
+                        .rosa_3 // Cor do texto se estiver na página atual
                     : const Color.fromARGB(255, 255, 255,
                         255), // Cor do texto se não estiver na página atual
               ),

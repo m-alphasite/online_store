@@ -28,7 +28,7 @@ class PageManager extends ChangeNotifier {
       );
       notifyListeners(); // Notifica os listeners para atualizar a interface do usuário
     } else {
-      // Opcional: Adicionar um tratamento de erro ou log para ajudar na depuração
+      // Adicionar um tratamento de erro ou log para ajudar na depuração
       print(
           'PageController não está anexado a nenhuma visualização de rolagem.');
     }
