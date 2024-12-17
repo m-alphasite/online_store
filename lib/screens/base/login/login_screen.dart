@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          "assets/images/image (2).png",
+                          "assets/images/logo.png",
                           width: 280,
                         ),
                         const SizedBox(
@@ -188,9 +188,8 @@ class LoginScreen extends StatelessWidget {
                                                         onFail: (e) {
                                                           // Função de falha
                                                           ScaffoldMessenger.of(
-                                                                  // Mensagem de erro
-                                                                  context)
-                                                              .showSnackBar(
+                                                              // Mensagem de erro
+                                                              context).showSnackBar(
                                                             SnackBar(
                                                               content: Text(e),
                                                               backgroundColor:
