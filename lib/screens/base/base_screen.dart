@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; // Importa o pacote Flutter para construção de interfaces
+import 'package:curved_navigation_bar/curved_navigation_bar.dart'; // Importa o pacote Curved Navigation Bar
 import 'package:online_store/common/custom_drawer/custom_drawer.dart'; // Importa o custom drawer
 import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Importa o arquivo de cores personalizadas
 import 'package:online_store/models/page_manager.dart'; // Importa o gerenciador de páginas
@@ -140,7 +141,7 @@ class BaseScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  toolbarHeight: 0.0, // Define a altura da AppBar
+                  toolbarHeight: 80.0, // Define a altura da AppBar
                 ),
                 body: const PedidosScreen(),
               ),
@@ -153,44 +154,32 @@ class BaseScreen extends StatelessWidget {
                   const NeverScrollableScrollPhysics(), // Desabilita a navegação pelo swipe
               children: screens,
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: pageManager.page,
+            bottomNavigationBar: CurvedNavigationBar(
+              backgroundColor:
+                  MinhasCores.rosa_1, // Cor de fundo do CurvedNavigationBar
+              color: MinhasCores.rosa_2, // Cor da barra
+              buttonBackgroundColor:
+                  MinhasCores.rosa_3, // Cor do botão ao ser pressionado
+              height: 60, // Altura da barra
+              items: <Widget>[
+                Icon(Icons.home, size: 30),
+                Icon(Icons.shopping_bag, size: 30),
+                if (userManager.user?.admin ?? false) ...[
+                  Icon(Icons.people, size: 30),
+                  Icon(Icons.list_alt, size: 30),
+                ] else ...[
+                  Icon(Icons.list, size: 30),
+                ],
+                Icon(Icons.location_on, size: 30),
+              ],
               onTap: (index) {
                 pageManager.setPage(index);
                 _pageController
                     .jumpToPage(index); // Navega para a página selecionada
               },
-              selectedItemColor: MinhasCores.rosa_3,
-              unselectedItemColor: MinhasCores.rosa_3,
-              items: [
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_bag),
-                  label: 'Produtos',
-                ),
-                if (userManager.user?.admin ?? false) ...[
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.people),
-                    label: 'Usuários',
-                  ),
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.list_alt),
-                    label: 'Pedidos',
-                  ),
-                ] else ...[
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.list),
-                    label: 'Meus Pedidos',
-                  ),
-                ],
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.location_on),
-                  label: 'Lojas',
-                ),
-              ],
+              animationDuration:
+                  const Duration(milliseconds: 300), // Duração da animação
+              animationCurve: Curves.easeInOut, // Curva da animação
             ),
           );
         },

@@ -50,6 +50,7 @@ dependencies:
   faker: ^2.2.0
   flutter_native_splash: ^2.4.3
   flutter_launcher_icons: ^0.14.2
+  curved_navigation_bar: ^1.0.6
  
   
 flutter_native_splash:
@@ -90,6 +91,7 @@ flutter:
   assets:
     - assets/images/image_2.jpg
     - assets/images/logo.png
+    - assets/images/icon_o.png
     
    
    

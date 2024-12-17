@@ -39,7 +39,7 @@ class CustomDrawerHeader extends StatelessWidget {
                 children: <Widget>[
                   // Adiciona a imagem do logo
                   Image.asset(
-                    "assets/images/icon-144.png",
+                    "assets/images/icon_o.png",
                     width: 100, // Define a largura da imagem
                     height: 100, // Define a altura da imagem
                   ),
