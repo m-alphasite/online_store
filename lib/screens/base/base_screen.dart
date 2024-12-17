@@ -162,15 +162,15 @@ class BaseScreen extends StatelessWidget {
                   MinhasCores.rosa_3, // Cor do botão ao ser pressionado
               height: 60, // Altura da barra
               items: <Widget>[
-                Icon(Icons.home, size: 30),
-                Icon(Icons.shopping_bag, size: 30),
+                Icon(Icons.home, size: 30, color: Colors.white),
+                Icon(Icons.shopping_bag, size: 30, color: Colors.white),
                 if (userManager.user?.admin ?? false) ...[
-                  Icon(Icons.people, size: 30),
-                  Icon(Icons.list_alt, size: 30),
+                  Icon(Icons.people, size: 30, color: Colors.white),
+                  Icon(Icons.list_alt, size: 30, color: Colors.white),
                 ] else ...[
-                  Icon(Icons.list, size: 30),
+                  Icon(Icons.list, size: 30.0, color: Colors.white),
                 ],
-                Icon(Icons.location_on, size: 30),
+                Icon(Icons.location_on, size: 30, color: Colors.white),
               ],
               onTap: (index) {
                 pageManager.setPage(index);
