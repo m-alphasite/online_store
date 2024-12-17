@@ -53,7 +53,7 @@ dependencies:
  
   
 flutter_native_splash:
-  image: "assets/images/image (2).png" 
+  image: "assets/images/logo.png" 
   android: true
   ios: true
   web: false

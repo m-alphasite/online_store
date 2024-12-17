@@ -67,7 +67,7 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         Image.asset(
                           "assets/images/logo.png",
-                          width: 280,
+                          width: 150,
                         ),
                         const SizedBox(
                             height: 16), // Espaço entre a imagem e o Card
