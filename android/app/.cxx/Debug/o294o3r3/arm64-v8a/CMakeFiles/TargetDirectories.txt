@@ -1,0 +1,2 @@
+D:/m_alp/GitHub_Repository/Loja_virtual/android/app/.cxx/Debug/o294o3r3/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/m_alp/GitHub_Repository/Loja_virtual/android/app/.cxx/Debug/o294o3r3/arm64-v8a/CMakeFiles/rebuild_cache.dir

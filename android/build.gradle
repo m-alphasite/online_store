@@ -1,0 +1,26 @@
+// Configura os repositórios usados pelo projeto
+allprojects {
+    repositories {
+        google() // Repositório oficial do Google para dependências Android
+        mavenCentral() // Repositório Maven para dependências adicionais
+        // Adicione outros repositórios, se necessário
+    }
+}
+
+// Define o diretório de build raiz do projeto
+rootProject.buildDir = "../build"
+
+// Configura os diretórios de build para subprojetos
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+// Garante que a avaliação dos subprojetos dependa do módulo ":app"
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+// Registra uma tarefa "clean" para limpar os diretórios de build
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

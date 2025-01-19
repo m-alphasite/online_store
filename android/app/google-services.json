@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "743393339744",
+    "project_id": "loja-virtual-bd179",
+    "storage_bucket": "loja-virtual-bd179.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743393339744:android:8c462d493a1160bc6b5605",
+        "android_client_info": {
+          "package_name": "com.malpha.loja_virtual"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743393339744-rvvkmbjkpsagd2s561okio2973e7u2ff.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malpha.loja_virtual",
+            "certificate_hash": "8d5722d0733c7965543cad676fa533e942c6c74f"
+          }
+        },
+        {
+          "client_id": "743393339744-rmoa5jcnsash1u1m57pb07k3grt90qgi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7jY0cgWWo67elhGty2v1enXzazbF5As"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743393339744-rmoa5jcnsash1u1m57pb07k3grt90qgi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "743393339744-4qrtqki73pg2377no7imkksn42o81oqr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.malpha.onlineStore"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743393339744:android:9e6eabc8dab991606b5605",
+        "android_client_info": {
+          "package_name": "com.malpha.online_store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743393339744-rmoa5jcnsash1u1m57pb07k3grt90qgi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7jY0cgWWo67elhGty2v1enXzazbF5As"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743393339744-rmoa5jcnsash1u1m57pb07k3grt90qgi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "743393339744-4qrtqki73pg2377no7imkksn42o81oqr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.malpha.onlineStore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

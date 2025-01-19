@@ -1,0 +1,60 @@
+plugins {
+    id "com.android.application"
+    // FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    id "kotlin-android"
+    // Flutter Gradle Plugin
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.malpha.online_store"
+    compileSdk = 34 // Atualize para a versão necessária para dependências recentes
+    ndkVersion = "27.0.12077973"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11 // Atualize para Java 11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    defaultConfig {
+        applicationId = "com.malpha.online_store"
+        minSdk = 23
+        targetSdk = 34 // Certifique-se de que está alinhado com o compileSdk
+        versionCode = 1 // Atualize conforme necessário
+        versionName = "1.0.0"
+        multiDexEnabled true // Suporte para MultiDex
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file(System.getProperty("user.home") + "/.android/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug // Altere para release, se necessário
+            minifyEnabled false
+            shrinkResources false
+        }
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.." // Caminho para o diretório raiz do Flutter
+}
+
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1' // Suporte MultiDex
+}
