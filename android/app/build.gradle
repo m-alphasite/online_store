@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.malpha.online_store"
-    compileSdk = 23 // Certifique-se de que está alinhado com suas dependências
+    compileSdk = 34 // Certifique-se de que está alinhado com suas dependências
 
     ndkVersion = "27.0.12077973"
 
@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.malpha.online_store"
-        minSdk = 21 // Ajuste para o mínimo suportado pelas dependências
+        minSdk = 23 // Ajuste para o mínimo suportado pelas dependências
         targetSdk = 34 // Alinhado com compileSdk
         versionCode = 1
         versionName = "1.0.0"
