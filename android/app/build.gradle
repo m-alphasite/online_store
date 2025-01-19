@@ -1,15 +1,13 @@
 plugins {
     id "com.android.application"
-    // FlutterFire Configuration
-    id 'com.google.gms.google-services'
+    id "com.google.gms.google-services" // FlutterFire Configuration
     id "kotlin-android"
-    // Flutter Gradle Plugin
-    id "dev.flutter.flutter-gradle-plugin"
+    id "dev.flutter.flutter-gradle-plugin" // Flutter Gradle Plugin
 }
 
 android {
     namespace = "com.malpha.online_store"
-    compileSdk = 34 // Certifique-se de que está alinhado com suas dependências
+    compileSdk = 35 // Atualizado para o SDK 35
 
     ndkVersion = "27.0.12077973"
 
@@ -24,8 +22,8 @@ android {
 
     defaultConfig {
         applicationId = "com.malpha.online_store"
-        minSdk = 23 // Ajuste para o mínimo suportado pelas dependências
-        targetSdk = 34 // Alinhado com compileSdk
+        minSdk = 23 // Ajustado para compatibilidade mínima necessária
+        targetSdk = 35 // Alinhado com compileSdk
         versionCode = 1
         versionName = "1.0.0"
         multiDexEnabled true // Suporte para múltiplos métodos
@@ -42,7 +40,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug // Altere para a configuração de release real, se necessário
+            signingConfig signingConfigs.debug // Substitua por release quando necessário
             minifyEnabled false // Desabilitado para facilitar debugging
             shrinkResources false
         }
@@ -57,7 +55,8 @@ android {
 
     configurations.all {
         resolutionStrategy {
-            force 'com.github.yalantis:ucrop:2.2.8' // Força a versão do uCrop necessária
+            // Força versões específicas para evitar conflitos
+            force 'com.github.yalantis:ucrop:2.2.8'
         }
     }
 }
