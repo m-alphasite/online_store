@@ -9,25 +9,26 @@ plugins {
 
 android {
     namespace = "com.malpha.online_store"
-    compileSdk = 34 // Atualize para a versão necessária para dependências recentes
+    compileSdk = 34 // Certifique-se de que está alinhado com suas dependências
+
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11 // Atualize para Java 11
+        sourceCompatibility = JavaVersion.VERSION_11 // Java 11 para compatibilidade moderna
         targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "11" // Kotlin alinhado com Java 11
     }
 
     defaultConfig {
         applicationId = "com.malpha.online_store"
-        minSdk = 23
-        targetSdk = 34 // Certifique-se de que está alinhado com o compileSdk
-        versionCode = 1 // Atualize conforme necessário
+        minSdk = 21 // Ajuste para o mínimo suportado pelas dependências
+        targetSdk = 34 // Alinhado com compileSdk
+        versionCode = 1
         versionName = "1.0.0"
-        multiDexEnabled true // Suporte para MultiDex
+        multiDexEnabled true // Suporte para múltiplos métodos
     }
 
     signingConfigs {
@@ -41,12 +42,22 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug // Altere para release, se necessário
-            minifyEnabled false
+            signingConfig signingConfigs.debug // Altere para a configuração de release real, se necessário
+            minifyEnabled false // Desabilitado para facilitar debugging
             shrinkResources false
         }
         debug {
             signingConfig signingConfigs.debug
+        }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage' // Desativa avisos desnecessários
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'com.github.yalantis:ucrop:2.2.8' // Força a versão do uCrop necessária
         }
     }
 }
@@ -57,4 +68,5 @@ flutter {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1' // Suporte MultiDex
+    implementation 'com.github.yalantis:ucrop:2.2.8' // Dependência do uCrop
 }
