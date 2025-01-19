@@ -96,12 +96,16 @@ class EditProductScreens extends StatelessWidget {
             SizesForm(product: product),
             SizedBox(height: 16),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: MinhasCores.rosa_3,
+              ),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   print('Válido!');
                 }
               },
-              child: const Text('Salvar'),
+              child: const Text('Salvar',
+                  style: TextStyle(color: Colors.white, fontSize: 18)),
             ),
           ],
         ),
