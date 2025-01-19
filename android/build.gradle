@@ -3,7 +3,8 @@ allprojects {
     repositories {
         google() // Repositório oficial do Google para dependências Android
         mavenCentral() // Repositório Maven para dependências adicionais
-        // Adicione outros repositórios, se necessário
+        // Caso precise de repositórios adicionais, adicione aqui:
+        // maven { url "https://jitpack.io" }
     }
 }
 

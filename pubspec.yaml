@@ -52,9 +52,9 @@ dependencies:
   flutter_launcher_icons: ^0.14.2
   curved_navigation_bar: ^1.0.6
   vibration: ^1.9.0
-  image_picker: ^1.1.2
+  image_picker: ^0.8.8
   flutter_plugin_android_lifecycle: ^2.0.24
-  image_cropper: ^3.0.2
+  image_cropper: ^3.0.3+1
  
   
 flutter_native_splash:
