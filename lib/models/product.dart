@@ -3,85 +3,71 @@ import 'package:flutter/material.dart'; // Importa o Flutter para construir a in
 import 'package:online_store/models/item_size.dart'; // Importa o modelo de tamanho
 
 class Product extends ChangeNotifier {
-  // Classe Product que estende ChangeNotifier para gerenciar as mudanças de estado
-
-  // Construtor padrão
   Product({
-    required this.id, // ID do produto
-    required this.name, // Nome do produto
-    required this.description, // Descrição do produto
-    required this.images, // Lista de URLs de imagens do produto
-    required this.sizes, // Lista de tamanhos do produto
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.images,
+    required this.sizes,
   });
 
-  // Construtor a partir de um DocumentSnapshot
-  Product.fromDocument(DocumentSnapshot doc) {
-    id =
-        doc.id; // Inicializa o ID do produto com o ID do documento do Firestore
-    name = doc['name']; // Inicializa o nome do produto com o valor do documento
-    description = doc['description']; // Inicializa a descrição do produto
+  Product.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+    id = doc.id;
+    name = doc.data()?['name'] ?? ''; // Verifica e inicializa o nome
+    description =
+        doc.data()?['description'] ?? ''; // Verifica e inicializa a descrição
+    images = List<String>.from(doc.data()?['images'] ?? []);
+    sizes = (doc.data()?['sizes'] as List<dynamic>? ?? [])
+        .map((s) => ItemSize.fromMap(s as Map<String, dynamic>))
+        .toList();
 
-    // Inicializa a lista de URLs de imagens com os valores do documento
-    images = List<String>.from(doc['images'] as List<dynamic>);
-
-    // Verifica se o documento contém dados e se há uma chave 'sizes'
-    if (doc.data() != null &&
-        (doc.data() as Map<String, dynamic>).containsKey('sizes')) {
-      // Inicializa a lista de tamanhos do produto a partir dos dados do documento
-      sizes = (doc['sizes'] as List<dynamic>)
-          .map((s) => ItemSize.fromMap(s as Map<String, dynamic>))
-          .toList();
-    } else {
-      sizes =
-          []; // Inicializa a lista de tamanhos como vazia se não houver dados
-    }
-
-    // Inicializa o tamanho selecionado com o primeiro tamanho disponível ou um tamanho vazio
+    // Inicializa o tamanho selecionado com o primeiro disponível ou cria um padrão vazio
     _selectedSize = sizes.isNotEmpty
         ? sizes.first
         : ItemSize(
-            name: '', // Nome vazio
-            price: 0, // Preço zero
-            stock: 0, // Estoque zero
+            name: '',
+            price: 0,
+            stock: 0,
           );
   }
 
-  late String id; // ID do produto
-  late String name; // Nome do produto
-  late String description; // Descrição do produto
-  List<String> images = []; // Lista de URLs de imagens do produto
-  List<ItemSize> sizes = []; // Lista de tamanhos do produto
+  late String id;
+  late String name;
+  late String description;
+  List<String> images = [];
+  List<ItemSize> sizes = [];
 
-  late ItemSize _selectedSize; // Tamanho selecionado
-  ItemSize get selectedSize =>
-      _selectedSize; // Getter para o tamanho selecionado
+  late ItemSize _selectedSize;
+  ItemSize get selectedSize => _selectedSize;
 
   set selectedSize(ItemSize value) {
-    _selectedSize = value; // Atualiza o tamanho selecionado
-    notifyListeners(); // Notifica os listeners que o tamanho selecionado foi atualizado
+    _selectedSize = value;
+    notifyListeners();
   }
 
+  /// Retorna o estoque total do produto
   int get totalStock {
-    int stock = 0; // Inicializa o estoque total como zero
-    for (final size in sizes) {
-      stock += size.stock; // Soma o estoque de cada tamanho ao estoque total
-    }
-    return stock; // Retorna o estoque total
+    return sizes.fold(0, (total, size) => total + size.stock);
   }
 
-  bool get hasStock {
-    return totalStock >
-        0; // Retorna true se houver estoque, false caso contrário
+  /// Verifica se há estoque no produto
+  bool get hasStock => totalStock > 0;
+
+  /// Retorna o preço base mais baixo entre os tamanhos com estoque
+  num get basePrice {
+    final pricesWithStock =
+        sizes.where((size) => size.hasStock).map((size) => size.price);
+    return pricesWithStock.isNotEmpty
+        ? pricesWithStock.reduce((a, b) => a < b ? a : b)
+        : 0;
   }
 
+  /// Busca um tamanho específico pelo nome
   ItemSize? findSize(String name) {
-    // Método para encontrar um tamanho pelo nome
     try {
-      return sizes.firstWhere((size) =>
-          size.name ==
-          name); // Retorna o primeiro tamanho que corresponde ao nome
+      return sizes.firstWhere((size) => size.name == name);
     } catch (e) {
-      return null; // Retorna null se o tamanho não for encontrado
+      return null;
     }
   }
 }

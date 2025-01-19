@@ -43,7 +43,8 @@ class ProductManager extends ChangeNotifier {
           .get(); // Consulta a coleção de produtos
 
       allProducts = snapProduct.docs
-          .map((doc) => Product.fromDocument(doc))
+          .map((doc) => Product.fromDocument(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
           .toList(); // Mapeia os documentos para objetos Product
 
       notifyListeners(); // Notifica os listeners para atualizar a interface do usuário

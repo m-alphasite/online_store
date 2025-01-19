@@ -7,9 +7,9 @@ class ItemSize {
     required this.stock, // Estoque do item
   });
 
-  final String name; // Nome do item
-  final num price; // Preço do item
-  final int stock; // Estoque do item
+  late final String name; // Nome do item
+  late final num price; // Preço do item
+  late final int stock; // Estoque do item
 
   // Propriedade para verificar se há estoque disponível
   bool get hasStock => stock > 0;
