@@ -31,10 +31,7 @@ class EditProductScreens extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            // Uso do ImagesForm
-            ImagesForm(
-              product: product,
-            ),
+            ImagesForm(product: product),
             TextFormField(
               initialValue: product.name,
               decoration: const InputDecoration(
@@ -46,14 +43,15 @@ class EditProductScreens extends StatelessWidget {
                 color: MinhasCores.rosa_3,
                 fontWeight: FontWeight.bold,
               ),
-              validator: (value) => value!.isEmpty
-                  ? 'Campo obrigatório'
-                  : null, // Uso do ImagesForm
+              validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null,
+              onSaved: (value) {
+                product.name = value ?? '';
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                "A partir de", // Texto adicional
+                "A partir de",
                 style: TextStyle(
                   fontSize: 17,
                   color: MinhasCores.rosa_1,
@@ -62,7 +60,7 @@ class EditProductScreens extends StatelessWidget {
               ),
             ),
             Text(
-              "R\$ ${product.basePrice.toStringAsFixed(2)}", // Exibe o preço do produto
+              "R\$ ${product.basePrice.toStringAsFixed(2)}",
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -72,7 +70,7 @@ class EditProductScreens extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 16, bottom: 8),
               child: Text(
-                "Descrição", // Cabeçalho da descrição do produto
+                "Descrição",
                 style: TextStyle(
                   fontSize: 16,
                   color: MinhasCores.rosa_1,
@@ -92,24 +90,58 @@ class EditProductScreens extends StatelessWidget {
                 fontSize: 16,
                 color: MinhasCores.rosa_3,
               ),
+              onSaved: (value) {
+                product.description = value ?? '';
+              },
             ),
             SizesForm(product: product),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: MinhasCores.rosa_3,
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  print('Válido!');
+                  _formKey.currentState!.save();
+                  _updateBasePrice();
+                  await _saveProduct(context);
                 }
               },
-              child: const Text('Salvar',
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
+              child: const Text(
+                'Salvar',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _updateBasePrice() {
+    final pricesWithStock =
+        product.sizes.where((size) => size.stock > 0).map((size) => size.price);
+
+    if (pricesWithStock.isNotEmpty) {
+      // Defina manualmente a lógica de cálculo ou ajuste no modelo
+      final basePrice = pricesWithStock.reduce((a, b) => a < b ? a : b);
+      debugPrint('Preço base atualizado: R\$ $basePrice');
+    } else {
+      debugPrint('Nenhum tamanho com estoque disponível.');
+    }
+  }
+
+  Future<void> _saveProduct(BuildContext context) async {
+    try {
+      await product.saveToFirestore();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Produto salvo com sucesso!')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao salvar o produto: $e')),
+      );
+    }
   }
 }

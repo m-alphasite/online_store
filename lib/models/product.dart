@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart'; // Importa o pacote Cloud Firestore
-import 'package:flutter/material.dart'; // Importa o Flutter para construir a interface do usuário
-import 'package:online_store/models/item_size.dart'; // Importa o modelo de tamanho
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:online_store/models/item_size.dart';
 
 class Product extends ChangeNotifier {
   Product({
@@ -11,24 +11,18 @@ class Product extends ChangeNotifier {
     required this.sizes,
   });
 
+  /// Construtor a partir de um documento do Firestore
   Product.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
     id = doc.id;
-    name = doc.data()?['name'] ?? ''; // Verifica e inicializa o nome
-    description =
-        doc.data()?['description'] ?? ''; // Verifica e inicializa a descrição
+    name = doc.data()?['name'] ?? '';
+    description = doc.data()?['description'] ?? '';
     images = List<String>.from(doc.data()?['images'] ?? []);
     sizes = (doc.data()?['sizes'] as List<dynamic>? ?? [])
         .map((s) => ItemSize.fromMap(s as Map<String, dynamic>))
         .toList();
 
-    // Inicializa o tamanho selecionado com o primeiro disponível ou cria um padrão vazio
-    _selectedSize = sizes.isNotEmpty
-        ? sizes.first
-        : ItemSize(
-            name: '',
-            price: 0,
-            stock: 0,
-          );
+    _selectedSize =
+        sizes.isNotEmpty ? sizes.first : ItemSize(name: '', price: 0, stock: 0);
   }
 
   late String id;
@@ -37,23 +31,21 @@ class Product extends ChangeNotifier {
   List<String> images = [];
   List<ItemSize> sizes = [];
 
+  /// Tamanho selecionado atualmente
   late ItemSize _selectedSize;
   ItemSize get selectedSize => _selectedSize;
-
   set selectedSize(ItemSize value) {
     _selectedSize = value;
     notifyListeners();
   }
 
-  /// Retorna o estoque total do produto
-  int get totalStock {
-    return sizes.fold(0, (total, size) => total + size.stock);
-  }
+  /// Estoque total do produto
+  int get totalStock => sizes.fold(0, (total, size) => total + size.stock);
 
-  /// Verifica se há estoque no produto
+  /// Verifica se o produto tem estoque
   bool get hasStock => totalStock > 0;
 
-  /// Retorna o preço base mais baixo entre os tamanhos com estoque
+  /// Preço base (menor preço entre tamanhos com estoque)
   num get basePrice {
     final pricesWithStock =
         sizes.where((size) => size.hasStock).map((size) => size.price);
@@ -62,12 +54,79 @@ class Product extends ChangeNotifier {
         : 0;
   }
 
-  /// Busca um tamanho específico pelo nome
+  /// Busca um tamanho pelo nome
   ItemSize? findSize(String name) {
     try {
       return sizes.firstWhere((size) => size.name == name);
     } catch (e) {
       return null;
+    }
+  }
+
+  /// Atualiza as propriedades do produto
+  void updateProduct({
+    String? newName,
+    String? newDescription,
+    List<String>? newImages,
+    List<ItemSize>? newSizes,
+  }) {
+    name = newName ?? name;
+    description = newDescription ?? description;
+    images = newImages ?? images;
+    sizes = newSizes ?? sizes;
+    notifyListeners();
+  }
+
+  /// Adiciona um tamanho (com validação para evitar duplicados)
+  void addSize(ItemSize size) {
+    if (!sizes.any((s) => s.name == size.name)) {
+      sizes.add(size);
+      notifyListeners();
+    } else {
+      debugPrint('Tamanho "${size.name}" já existe. Não foi adicionado.');
+    }
+  }
+
+  /// Remove um tamanho e atualiza o tamanho selecionado, se necessário
+  void removeSize(ItemSize size) {
+    sizes.remove(size);
+    if (_selectedSize == size && sizes.isNotEmpty) {
+      _selectedSize = sizes.first;
+    }
+    notifyListeners();
+  }
+
+  /// Valida os tamanhos antes de salvar
+  bool validateSizes() {
+    for (final size in sizes) {
+      if (size.name.isEmpty || size.price <= 0 || size.stock < 0) {
+        debugPrint('Erro: Tamanho inválido - $size');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// Salva o produto no Firestore (com validação)
+  Future<void> saveToFirestore() async {
+    if (!validateSizes()) {
+      debugPrint('Erro: Existem tamanhos inválidos. Produto não salvo.');
+      return;
+    }
+
+    final data = {
+      'name': name,
+      'description': description,
+      'images': images,
+      'sizes': sizes.map((size) => size.toMap()).toList(),
+    };
+
+    try {
+      final docRef = FirebaseFirestore.instance.collection('products').doc(id);
+      await docRef.set(data, SetOptions(merge: true));
+      debugPrint('Produto "$name" salvo com sucesso!');
+    } catch (e) {
+      debugPrint('Erro ao salvar o produto: $e');
     }
   }
 }
