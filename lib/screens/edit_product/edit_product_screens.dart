@@ -43,7 +43,16 @@ class EditProductScreens extends StatelessWidget {
                 color: MinhasCores.rosa_3,
                 fontWeight: FontWeight.bold,
               ),
-              validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Campo obrigatório';
+                }
+                if (value.length < 6) {
+                  return 'Nome muito curto';
+                } else {
+                  return null;
+                }
+              },
               onSaved: (value) {
                 product.name = value ?? '';
               },

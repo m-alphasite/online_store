@@ -51,6 +51,11 @@ class _ImagesFormState extends State<ImagesForm> {
   Widget build(BuildContext context) {
     return FormField<List<dynamic>>(
       initialValue: List.from(widget.product.images),
+      validator: (images) {
+        if (images!.isEmpty) {
+          return 'Insira pelo menos uma imagem.';
+        }
+      },
       builder: (state) {
         final List<Widget> imageWidgets = state.value?.map<Widget>((image) {
               return Stack(
@@ -117,6 +122,17 @@ class _ImagesFormState extends State<ImagesForm> {
                 items: imageWidgets,
               ),
             ),
+            if (state.hasError)
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  state.errorText ?? '',
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: state.value!.asMap().entries.map((entry) {
