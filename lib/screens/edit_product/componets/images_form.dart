@@ -5,6 +5,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:online_store/common/custom_drawer/minhas_cores.dart';
 import 'package:online_store/models/product.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ImagesForm extends StatefulWidget {
   final Product product;
@@ -17,6 +18,20 @@ class ImagesForm extends StatefulWidget {
 
 class _ImagesFormState extends State<ImagesForm> {
   int _currentIndex = 0;
+
+  Future<bool> _checkPermissions() async {
+    PermissionStatus status = await Permission.storage.request();
+    if (status.isDenied) {
+      return false;
+    }
+
+    // Para Android 13+ (API 33), solicitar permissão específica de fotos
+    if (await Permission.photos.isDenied) {
+      await Permission.photos.request();
+    }
+
+    return status.isGranted;
+  }
 
   Future<File?> _cropImage(File imageFile) async {
     try {
@@ -53,18 +68,25 @@ class _ImagesFormState extends State<ImagesForm> {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(
         source: source,
-        maxWidth: 800,
+        maxWidth: 800, // Reduz tamanho da imagem
         maxHeight: 800,
-        imageQuality: 80,
+        imageQuality: 70, // Reduz qualidade para economizar memória
       );
 
       if (pickedFile != null) {
-        final croppedFile = await _cropImage(File(pickedFile.path));
+        File selectedFile = File(pickedFile.path);
+
+        // Verifica se o arquivo existe antes de prosseguir
+        if (!await selectedFile.exists()) {
+          debugPrint('Arquivo não encontrado!');
+          return;
+        }
+
+        final croppedFile = await _cropImage(selectedFile);
         if (croppedFile != null) {
-          setState(() {
-            state.value!.add(croppedFile.path);
-          });
-          state.didChange(state.value);
+          final newList = List<String>.from(state.value ?? []);
+          newList.add(croppedFile.path);
+          state.didChange(newList);
         }
       }
     } catch (e) {
@@ -72,7 +94,14 @@ class _ImagesFormState extends State<ImagesForm> {
     }
   }
 
-  void _showImageSourceActionSheet(FormFieldState<List<dynamic>> state) {
+  void _showImageSourceActionSheet(FormFieldState<List<dynamic>> state) async {
+    bool hasPermission = await _checkPermissions();
+    if (!hasPermission) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Permissão negada!")));
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -106,10 +135,9 @@ class _ImagesFormState extends State<ImagesForm> {
   }
 
   void _removeImage(String image, FormFieldState<List<dynamic>> state) {
-    setState(() {
-      state.value!.remove(image);
-    });
-    state.didChange(state.value);
+    final newList = List<String>.from(state.value ?? []);
+    newList.remove(image);
+    state.didChange(newList);
   }
 
   @override
@@ -117,19 +145,20 @@ class _ImagesFormState extends State<ImagesForm> {
     return FormField<List<dynamic>>(
       initialValue: List.from(widget.product.images),
       validator: (images) {
-        if (images!.isEmpty) {
+        if (images == null || images.isEmpty) {
           return 'Selecione pelo menos uma imagem';
-        } else {
-          return null;
         }
+        return null;
       },
       builder: (state) {
+        final images = state.value ?? [];
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AspectRatio(
               aspectRatio: 1.0,
-              child: CarouselSlider(
+              child: CarouselSlider.builder(
                 options: CarouselOptions(
                   height: 390,
                   viewportFraction: 1.0,
@@ -142,68 +171,79 @@ class _ImagesFormState extends State<ImagesForm> {
                     });
                   },
                 ),
-                items: [
-                  ...state.value!.map((image) {
-                    return Stack(
-                      children: [
-                        if (Uri.tryParse(image)?.isAbsolute ?? false)
-                          Image.network(
-                            image,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
-                          )
-                        else
-                          Image.file(
-                            File(image),
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.remove_circle,
-                              color: Colors.red,
-                              size: 24,
+                itemCount: images.length + 1,
+                itemBuilder: (context, index, realIndex) {
+                  if (index == images.length) {
+                    return InkWell(
+                      onTap: () => _showImageSourceActionSheet(state),
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
-                            onPressed: () => _removeImage(image, state),
-                          ),
+                          ],
                         ),
-                      ],
+                        child: const Icon(
+                          Icons.add_a_photo,
+                          size: 40,
+                          color: MinhasCores.rosa_3,
+                        ),
+                      ),
                     );
-                  }).toList(),
-                  InkWell(
-                    onTap: () => _showImageSourceActionSheet(state),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
+                  }
+
+                  final image = images[index];
+                  return Stack(
+                    children: [
+                      if (Uri.tryParse(image)?.isAbsolute ?? false)
+                        Image.network(
+                          image,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
+                        )
+                      else
+                        Image.file(
+                          File(image),
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.error,
+                                color: Colors.red,
+                              ),
+                            );
+                          },
+                        ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.remove_circle,
+                            color: Colors.red,
+                            size: 24,
                           ),
-                        ],
+                          onPressed: () => _removeImage(image, state),
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.add_a_photo,
-                        size: 40,
-                        color: MinhasCores.rosa_3,
-                      ),
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ),
             const SizedBox(height: 8.0),

@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
+	    <key>NSPhotoLibraryUsageDescription</key>
+<string>O aplicativo precisa acessar sua galeria para selecionar imagens.</string>
+<key>NSCameraUsageDescription</key>
+<string>O aplicativo precisa acessar sua câmera para tirar fotos.</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>O aplicativo precisa salvar imagens na sua galeria.</string>
+
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
