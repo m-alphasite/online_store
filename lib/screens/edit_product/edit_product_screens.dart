@@ -69,7 +69,7 @@ class EditProductScreens extends StatelessWidget {
               ),
             ),
             Text(
-              "R\$ ${product.basePrice.toStringAsFixed(2)}",
+              "R\$ ${product.basePrice is num ? (product.basePrice as num).toStringAsFixed(2) : '0.00'}",
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -103,7 +103,11 @@ class EditProductScreens extends StatelessWidget {
                 product.description = value ?? '';
               },
             ),
-            SizesForm(product: product),
+            SizesForm(
+              product: product,
+              onSizesUpdated:
+                  _updateBasePrice, // Garante que o preço seja atualizado
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

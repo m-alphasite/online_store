@@ -1,91 +1,121 @@
-import 'package:flutter/material.dart'; // Importa o pacote Flutter para construção de interfaces
-import 'package:online_store/models/product.dart'; // Importa o modelo Product
+import 'package:flutter/material.dart';
+import 'package:online_store/models/product.dart';
 
-// Classe ProductListTile que estende StatelessWidget para criar um tile de lista de produtos
 class ProductListTile extends StatelessWidget {
   const ProductListTile({
     super.key,
-    required this.product, // Construtor da classe ProductListTile
+    required this.product,
   });
 
-  final Product product; // Declaração do produto
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Evento de clique
         Navigator.of(context).pushNamed(
           '/produtos',
           arguments: product,
-        ); // Navega para a tela de detalhes do produto ao clicar
+        );
       },
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(4.0), // Define o raio da borda do card
+          borderRadius: BorderRadius.circular(4.0),
         ),
         child: Container(
-          height: 150, // Define a altura do container
-          padding: const EdgeInsets.all(16.0), // Define o padding do container
+          height: 150,
+          padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
               AspectRatio(
-                aspectRatio: 1.0, // Mantém a proporção 1:1 para a imagem
+                aspectRatio: 1.0,
                 child: Image.network(
-                  product.images.first, // Carrega a primeira imagem do produto
-                  fit: BoxFit.cover, // Cobre todo o espaço disponível
+                  product.images.isNotEmpty
+                      ? product.images.first
+                      : 'https://via.placeholder.com/150', // Imagem padrão caso não tenha
+                  fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(
-                width: 16.0, // Espaço entre a imagem e o texto
-              ),
+              const SizedBox(width: 16.0),
               Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceEvenly, // Distribui os itens da coluna igualmente
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start, // Alinha os itens à esquerda
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      product.name, // Nome do produto
+                      product.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.w800,
-                        fontSize: 19.0, // Estilo do texto
+                        fontSize: 19.0,
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 4.0), // Espaço superior
+                      padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
-                        product.description, // Descrição do produto
+                        product.description,
                         style: const TextStyle(
                           fontWeight: FontWeight.w300,
-                          fontSize: 12.0, // Estilo do texto
+                          fontSize: 12.0,
                         ),
-                        maxLines: 2, // Limita a duas linhas
-                        overflow: TextOverflow
-                            .ellipsis, // Trunca o texto se for muito longo
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 4.0), // Espaço superior
-                      child: const Text(
-                        "A partir de", // Texto adicional
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        "A partir de",
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
-                          fontSize: 15.0, // Estilo do texto
+                          fontSize: 15.0,
                         ),
                       ),
                     ),
-                    const Text(
-                      "R\$ 19.99", // Preço do produto
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 19.0,
-                        color: Colors.green, // Cor do texto
-                      ),
+                    FutureBuilder<num>(
+                      future: product.basePriceAsync,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Text(
+                            "Carregando...",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 19.0,
+                              color: Colors.grey,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Text(
+                            "Erro ao carregar",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 19.0,
+                              color: Colors.red,
+                            ),
+                          );
+                        } else {
+                          final preco = snapshot.data ?? 0;
+                          if (preco == 0) {
+                            return const Text(
+                              "Sem estoque",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 19.0,
+                                color: Colors.red,
+                              ),
+                            );
+                          }
+
+                          return Text(
+                            "R\$ ${preco.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 19.0,
+                              color: Colors.green,
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),

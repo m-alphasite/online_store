@@ -3,7 +3,10 @@ import 'package:online_store/models/product.dart';
 import 'package:online_store/models/item_size.dart';
 
 class SizesForm extends StatelessWidget {
-  const SizesForm({super.key, required this.product});
+  const SizesForm(
+      {super.key,
+      required this.product,
+      required void Function() onSizesUpdated});
 
   final Product product;
 

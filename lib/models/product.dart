@@ -48,10 +48,61 @@ class Product extends ChangeNotifier {
   /// Preço base (menor preço entre tamanhos com estoque)
   num get basePrice {
     final pricesWithStock =
-        sizes.where((size) => size.hasStock).map((size) => size.price);
-    return pricesWithStock.isNotEmpty
-        ? pricesWithStock.reduce((a, b) => a < b ? a : b)
-        : 0;
+        sizes.where((size) => size.hasStock).map((size) => size.price).toList();
+
+    if (pricesWithStock.isNotEmpty) {
+      num menorPreco = pricesWithStock.reduce((a, b) => a < b ? a : b);
+      debugPrint("Menor preço encontrado neste produto: R\$ $menorPreco");
+      return menorPreco;
+    } else {
+      return 0; // Retorna 0 temporariamente até buscar outro produto
+    }
+  }
+
+  /// Método assíncrono para buscar o menor preço disponível no Firestore
+  Future<num> get basePriceAsync async {
+    final pricesWithStock =
+        sizes.where((size) => size.hasStock).map((size) => size.price).toList();
+
+    if (pricesWithStock.isNotEmpty) {
+      return pricesWithStock.reduce((a, b) => a < b ? a : b);
+    } else {
+      return await _findCheapestAvailableProduct();
+    }
+  }
+
+  /// Busca o menor preço disponível de outro produto no Firestore
+  Future<num> _findCheapestAvailableProduct() async {
+    try {
+      final productsSnapshot =
+          await FirebaseFirestore.instance.collection('products').get();
+
+      num? lowestPrice;
+
+      for (final doc in productsSnapshot.docs) {
+        final product = Product.fromDocument(doc);
+
+        final productPricesWithStock = product.sizes
+            .where((size) => size.hasStock)
+            .map((size) => size.price)
+            .toList();
+
+        if (productPricesWithStock.isNotEmpty) {
+          final cheapestProductPrice =
+              productPricesWithStock.reduce((a, b) => a < b ? a : b);
+
+          if (lowestPrice == null || cheapestProductPrice < lowestPrice) {
+            lowestPrice = cheapestProductPrice;
+          }
+        }
+      }
+
+      debugPrint("Menor preço global encontrado: R\$ ${lowestPrice ?? 0}");
+      return lowestPrice ?? 0; // Retorna 0 se nenhum produto tiver estoque
+    } catch (e) {
+      debugPrint('Erro ao buscar outro produto com estoque: $e');
+      return 0;
+    }
   }
 
   /// Busca um tamanho pelo nome
