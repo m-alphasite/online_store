@@ -20,17 +20,21 @@ class _ImagesFormState extends State<ImagesForm> {
   int _currentIndex = 0;
 
   Future<bool> _checkPermissions() async {
-    PermissionStatus status = await Permission.storage.request();
-    if (status.isDenied) {
-      return false;
+    // Para Android 13+ (API 33), usar READ_MEDIA_IMAGES ao invés de READ_EXTERNAL_STORAGE
+    if (Platform.isAndroid) {
+      if (await Permission.storage.request().isDenied &&
+          await Permission.photos.request().isDenied &&
+          await Permission.camera.request().isDenied) {
+        return false;
+      }
+    } else if (Platform.isIOS) {
+      // Para iOS, solicitar acesso à câmera e à galeria
+      if (await Permission.photos.request().isDenied ||
+          await Permission.camera.request().isDenied) {
+        return false;
+      }
     }
-
-    // Para Android 13+ (API 33), solicitar permissão específica de fotos
-    if (await Permission.photos.isDenied) {
-      await Permission.photos.request();
-    }
-
-    return status.isGranted;
+    return true;
   }
 
   Future<File?> _cropImage(File imageFile) async {
@@ -97,8 +101,11 @@ class _ImagesFormState extends State<ImagesForm> {
   void _showImageSourceActionSheet(FormFieldState<List<dynamic>> state) async {
     bool hasPermission = await _checkPermissions();
     if (!hasPermission) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Permissão negada!")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                "Permissão negada! Vá para as configurações do dispositivo para ativar.")),
+      );
       return;
     }
 
