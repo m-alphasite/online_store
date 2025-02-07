@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:online_store/common/custom_drawer/minhas_cores.dart';
 import 'package:online_store/models/product.dart';
-import 'package:online_store/screens/edit_product/componets/images_form.dart';
-import 'package:online_store/screens/edit_product/componets/sizes_form.dart';
+import 'package:online_store/screens/edit_product/components/images_form.dart';
+import 'package:online_store/screens/edit_product/components/sizes_form.dart';
 
 class EditProductScreens extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -68,13 +68,20 @@ class EditProductScreens extends StatelessWidget {
                 ),
               ),
             ),
-            Text(
-              "R\$ ${product.basePrice is num ? (product.basePrice as num).toStringAsFixed(2) : '0.00'}",
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: MinhasCores.rosa_3,
-              ),
+            FutureBuilder<num>(
+              future: product.basePriceAsync,
+              builder: (context, snapshot) {
+                return Text(
+                  snapshot.hasData
+                      ? "R\$ ${snapshot.data!.toStringAsFixed(2)}"
+                      : "Carregando...",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: MinhasCores.rosa_3,
+                  ),
+                );
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(top: 16, bottom: 8),
@@ -105,8 +112,7 @@ class EditProductScreens extends StatelessWidget {
             ),
             SizesForm(
               product: product,
-              onSizesUpdated:
-                  _updateBasePrice, // Garante que o preço seja atualizado
+              onSizesUpdated: _updateBasePrice,
             ),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -136,11 +142,7 @@ class EditProductScreens extends StatelessWidget {
         product.sizes.where((size) => size.stock > 0).map((size) => size.price);
 
     if (pricesWithStock.isNotEmpty) {
-      // Defina manualmente a lógica de cálculo ou ajuste no modelo
-      final basePrice = pricesWithStock.reduce((a, b) => a < b ? a : b);
-      debugPrint('Preço base atualizado: R\$ $basePrice');
-    } else {
-      debugPrint('Nenhum tamanho com estoque disponível.');
+      product.basePrice = pricesWithStock.reduce((a, b) => a < b ? a : b);
     }
   }
 
@@ -150,7 +152,12 @@ class EditProductScreens extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Produto salvo com sucesso!')),
       );
-      Navigator.pop(context);
+      // Redireciona para a tela do produto salvo
+      Navigator.pushReplacementNamed(
+        context,
+        '/produtos', // Verifique se esta rota está definida no seu MaterialApp
+        arguments: product,
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao salvar o produto: $e')),

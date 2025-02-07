@@ -13,7 +13,13 @@ class SizesForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormField<List<ItemSize>>(
-      initialValue: product.sizes,
+      initialValue: List.from(product.sizes),
+      validator: (sizes) {
+        if (sizes!.isEmpty) {
+          return 'Adicione pelo menos um tamanho';
+        }
+        return null;
+      },
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,17 +47,28 @@ class SizesForm extends StatelessWidget {
                 ),
               ],
             ),
+            // Exibe erro se não houver tamanhos
+            if (state.hasError) ...[
+              const SizedBox(height: 8),
+              Text(
+                state.errorText!,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ],
+            // Exibe os tamanhos existentes com campos de entrada
             ...?state.value?.map((size) {
+                  final index = state.value!.indexOf(size);
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
                       children: [
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: TextFormField(
                             initialValue: size.name,
                             decoration: const InputDecoration(
-                              labelText: 'Tamanho',
+                              labelText: 'Título',
                               border: OutlineInputBorder(),
                             ),
                             onChanged: (value) {
@@ -59,16 +76,23 @@ class SizesForm extends StatelessWidget {
                               state.value![index].name = value.trim();
                               state.didChange(state.value);
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo obrigatório';
+                              }
+                              return null; // Validação bem-sucedida
+                            },
                           ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: TextFormField(
                             initialValue: size.price.toString(),
                             decoration: const InputDecoration(
                               labelText: 'Preço',
                               border: OutlineInputBorder(),
+                              prefixText: 'R\$ ',
                             ),
                             keyboardType:
                                 TextInputType.numberWithOptions(decimal: true),
@@ -77,6 +101,15 @@ class SizesForm extends StatelessWidget {
                               state.value![index].price =
                                   num.tryParse(value) ?? 0;
                               state.didChange(state.value);
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo obrigatório';
+                              }
+                              if (num.tryParse(value) == null) {
+                                return 'Preço inválido';
+                              }
+                              return null; // Validação bem-sucedida
                             },
                           ),
                         ),
@@ -95,6 +128,15 @@ class SizesForm extends StatelessWidget {
                               state.value![index].stock =
                                   int.tryParse(value) ?? 0;
                               state.didChange(state.value);
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Campo obrigatório';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Estoque inválido';
+                              }
+                              return null; // Validação bem-sucedida
                             },
                           ),
                         ),

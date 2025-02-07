@@ -45,18 +45,15 @@ class Product extends ChangeNotifier {
   /// Verifica se o produto tem estoque
   bool get hasStock => totalStock > 0;
 
-  /// Preço base (menor preço entre tamanhos com estoque)
-  num get basePrice {
-    final pricesWithStock =
-        sizes.where((size) => size.hasStock).map((size) => size.price).toList();
+  /// Preço base (menor preço entre tamanhos com estoque) com setter para atualização
+  late num _basePrice =
+      0; // Adicionamos um campo privado para armazenar o valor
 
-    if (pricesWithStock.isNotEmpty) {
-      num menorPreco = pricesWithStock.reduce((a, b) => a < b ? a : b);
-      debugPrint("Menor preço encontrado neste produto: R\$ $menorPreco");
-      return menorPreco;
-    } else {
-      return 0; // Retorna 0 temporariamente até buscar outro produto
-    }
+  num get basePrice => _basePrice; // Getter para acessar o menor preço
+
+  set basePrice(num value) {
+    _basePrice = value;
+    notifyListeners(); // Atualiza os ouvintes quando o preço mudar
   }
 
   /// Método assíncrono para buscar o menor preço disponível no Firestore
@@ -170,6 +167,7 @@ class Product extends ChangeNotifier {
       'description': description,
       'images': images,
       'sizes': sizes.map((size) => size.toMap()).toList(),
+      'basePrice': basePrice, // Agora o preço base será salvo no Firestore
     };
 
     try {
