@@ -27,7 +27,7 @@ class EditProductScreens extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          editing ? 'Editar Anúncio' : 'Criar Anúncio',
+          editing ? 'Editar Produto' : 'Criar Anúncio',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
