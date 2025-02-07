@@ -178,4 +178,14 @@ class Product extends ChangeNotifier {
       debugPrint('Erro ao salvar o produto: $e');
     }
   }
+
+  Product clone() {
+    return Product(
+      id: id,
+      name: name,
+      description: description,
+      images: List.from(images),
+      sizes: sizes.map((size) => size.clone()).toList(),
+    );
+  }
 }

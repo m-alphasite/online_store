@@ -7,8 +7,18 @@ import 'package:online_store/screens/edit_product/components/sizes_form.dart';
 class EditProductScreens extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final Product product;
+  final bool editing;
 
-  EditProductScreens({super.key, required this.product});
+  EditProductScreens({super.key, required Product? p})
+      : editing = p != null,
+        product = p?.clone() ??
+            Product(
+              id: '',
+              name: '',
+              description: '',
+              images: [],
+              sizes: [],
+            );
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +26,8 @@ class EditProductScreens extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          'Editar Produto',
+        title: Text(
+          editing ? 'Editar Anúncio' : 'Criar Anúncio',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,

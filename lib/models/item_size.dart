@@ -28,6 +28,14 @@ class ItemSize {
     };
   }
 
+  ItemSize clone() {
+    return ItemSize(
+      name: name,
+      price: price,
+      stock: stock,
+    );
+  }
+
   @override
   String toString() {
     return 'ItemSize{name: $name, price: $price, stock: $stock}';

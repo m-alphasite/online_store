@@ -2,6 +2,7 @@ import 'package:flutter/material.dart'; // Import the Flutter library
 import 'package:online_store/common/custom_drawer/custom_drawer.dart'; // Import the CustomDrawer widget
 import 'package:online_store/common/custom_drawer/minhas_cores.dart'; // Import the MinhasCores widget
 import 'package:online_store/models/product_manager.dart'; // Import the ProductManager model
+import 'package:online_store/models/user_manager.dart';
 import 'package:online_store/screens/product/components/product_list_tile.dart'; // Import the ProductListTile widget
 import 'package:online_store/screens/product/components/search_dialog.dart'; // Import the SearchDialog widget
 import 'package:provider/provider.dart'; // Import the Provider library
@@ -114,6 +115,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       ),
                     );
                   }
+                },
+              ),
+              Consumer<UserManager>(
+                builder: (_, userManager, __) {
+                  if (userManager.adminEnabled) {
+                    return IconButton(
+                      icon: const Icon(Icons.add, color: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          '/edit_product',
+                        );
+                      },
+                    );
+                  }
+                  return Container();
                 },
               ),
             ],

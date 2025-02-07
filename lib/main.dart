@@ -96,12 +96,9 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case '/edit_product':
               final product = settings.arguments as Product?;
-              if (product != null) {
-                return MaterialPageRoute(
-                  builder: (_) => EditProductScreens(product: product),
-                );
-              }
-              return _errorRoute('Produto inválido.');
+              return MaterialPageRoute(
+                builder: (_) => EditProductScreens(p: product),
+              );
 
             case '/produtos':
               final product = settings.arguments as Product?;
