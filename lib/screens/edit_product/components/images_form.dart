@@ -52,14 +52,14 @@ class _ImagesFormState extends State<ImagesForm> {
     return FormField<List<dynamic>>(
       initialValue: List.from(widget.product.images),
       validator: (images) {
-        if (images!.isEmpty) {
+        if (images == null || images.isEmpty) {
           return 'Insira pelo menos uma imagem.';
         }
         return null;
       },
-      onSaved: (images) {
-        widget.product.newImages = images!;
-      },
+      onSaved: (images) => widget.product.updateProduct(
+        newImages: images?.map((image) => image.toString()).toList(),
+      ),
       builder: (state) {
         final List<Widget> imageWidgets = state.value?.map<Widget>((image) {
               return Stack(

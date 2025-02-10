@@ -28,6 +28,7 @@ class ItemSize {
     };
   }
 
+  // Método para criar uma cópia da instância
   ItemSize clone() {
     return ItemSize(
       name: name,

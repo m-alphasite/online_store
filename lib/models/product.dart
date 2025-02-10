@@ -30,6 +30,12 @@ class Product extends ChangeNotifier {
     _updateBasePrice(); // Garante que _basePrice seja inicializado corretamente
   }
 
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // Verifique se o ID não é vazio ou nulo
+  DocumentReference get firestoreRef =>
+      firestore.doc('products/$id'); // Garante que o caminho esteja correto
+
   late String id;
   late String name;
   late String description;
@@ -134,37 +140,25 @@ class Product extends ChangeNotifier {
     return true;
   }
 
+  /// Converte os tamanhos em uma lista de Map<String, dynamic> para exportação
+  List<Map<String, dynamic>> exportSizeList() {
+    return sizes.map((size) => size.toMap()).toList();
+  }
+
   /// Salva o produto no Firestore, evitando sobrescritas desnecessárias
   Future<void> saveToFirestore() async {
-    if (!validateSizes()) {
-      debugPrint('Erro: Existem tamanhos inválidos. Produto não salvo.');
-      return;
-    }
-
-    final data = {
+    final Map<String, dynamic> data = {
       'name': name,
       'description': description,
       'images': images,
-      'sizes': sizes.map((size) => size.toMap()).toList(),
-      'basePrice': basePrice,
+      'sizes': exportSizeList(),
     };
 
-    try {
-      if (id.isEmpty) {
-        // Criando um novo documento
-        final docRef =
-            await FirebaseFirestore.instance.collection('products').add(data);
-        id = docRef.id; // Atribui o ID gerado ao produto
-        debugPrint('Novo produto "$name" salvo com sucesso com ID: $id');
-      } else {
-        // Atualizando um produto existente
-        final docRef =
-            FirebaseFirestore.instance.collection('products').doc(id);
-        await docRef.set(data, SetOptions(merge: true));
-        debugPrint('Produto "$name" atualizado com sucesso!');
-      }
-    } catch (e) {
-      debugPrint('Erro ao salvar o produto: $e');
+    if (id.isEmpty) {
+      final doc = await firestore.collection('products').add(data);
+      id = doc.id;
+    } else {
+      await firestoreRef.update(data);
     }
   }
 

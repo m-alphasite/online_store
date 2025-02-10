@@ -20,6 +20,9 @@ class SizesForm extends StatelessWidget {
         }
         return null;
       },
+      onSaved: (sizes) {
+        product.updateProduct(newSizes: sizes);
+      },
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
