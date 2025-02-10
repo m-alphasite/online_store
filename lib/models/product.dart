@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:online_store/models/item_size.dart';
+import 'dart:io';
+import 'package:uuid/uuid.dart'; // Para manipulação de arquivos locais
 
 class Product extends ChangeNotifier {
   Product({
@@ -31,10 +34,10 @@ class Product extends ChangeNotifier {
   }
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
-  // Verifique se o ID não é vazio ou nulo
-  DocumentReference get firestoreRef =>
-      firestore.doc('products/$id'); // Garante que o caminho esteja correto
+  // Corrigindo o tipo de 'StorageReference' para 'Reference'
+  Reference get storageRef => storage.ref().child('products/$id');
 
   late String id;
   late String name;
@@ -42,7 +45,8 @@ class Product extends ChangeNotifier {
   List<String> images = [];
   List<ItemSize> sizes = [];
 
-  List<dynamic> newImages = [];
+  List<dynamic> newImages =
+      []; // Lista de imagens novas que precisam ser enviadas
 
   /// Tamanho selecionado atualmente
   late ItemSize _selectedSize;
@@ -108,58 +112,79 @@ class Product extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Adiciona um tamanho ao produto, garantindo que não haja duplicatas
-  void addSize(ItemSize size) {
-    if (!sizes.any((s) => s.name == size.name)) {
-      sizes.add(size);
-      _updateBasePrice();
-      notifyListeners();
-    } else {
-      debugPrint('Tamanho "${size.name}" já existe. Não foi adicionado.');
-    }
-  }
+  /// Função para enviar as novas imagens para o Firebase Storage
+  Future<void> uploadImages() async {
+    final List<String> updatedImages = [];
 
-  /// Remove um tamanho e atualiza o tamanho selecionado, se necessário
-  void removeSize(ItemSize size) {
-    sizes.remove(size);
-    if (_selectedSize == size && sizes.isNotEmpty) {
-      _selectedSize = sizes.first;
+    // Verificando as novas imagens e enviando para o Firebase Storage
+    for (final newImage in newImages) {
+      // Verificando se a imagem é nova e precisa ser enviada para o Firebase Storage
+      if (images.contains(newImage)) {
+        // Imagem já existe, mantemos a URL existente
+        updatedImages.add(newImage);
+      } else {
+        try {
+          print('Enviando imagem para o Firebase Storage...');
+          final url = await uploadImageToStorage(newImage);
+          updatedImages.add(url); // Adiciona a nova URL de imagem
+          print('Imagem enviada com sucesso: $url');
+        } catch (e) {
+          print('Erro ao enviar imagem: $e');
+        }
+      }
     }
-    _updateBasePrice();
+
+    // Atualiza as imagens no Firestore
+    images = updatedImages;
+
+    // Notifica os ouvintes sobre a mudança
     notifyListeners();
   }
 
-  /// Valida se os tamanhos do produto estão corretos
-  bool validateSizes() {
-    for (final size in sizes) {
-      if (size.name.isEmpty || size.price <= 0 || size.stock < 0) {
-        debugPrint('Erro: Tamanho inválido - ${size.toMap()}');
-        return false;
-      }
+  /// Envia uma nova imagem para o Firebase Storage e retorna a URL
+  Future<String> uploadImageToStorage(String imagePath) async {
+    final storageRef = storage
+        .ref()
+        .child('products/$id/${DateTime.now().millisecondsSinceEpoch}');
+    final file = File(imagePath);
+
+    try {
+      final uploadTask = storageRef.putFile(file);
+      final snapshot = await uploadTask.whenComplete(() {});
+      print('Upload concluído. Obtendo a URL...');
+      return await snapshot.ref.getDownloadURL(); // Retorna a URL da imagem
+    } catch (e) {
+      print('Erro durante o upload da imagem: $e');
+      rethrow; // Re-lança o erro para ser tratado fora da função
     }
-    return true;
+  }
+
+  /// Salva o produto no Firestore, evitando sobrescritas desnecessárias
+  Future<void> saveToFirestore() async {
+    await uploadImages(); // Chama a função para upload das imagens
+
+    final Map<String, dynamic> data = {
+      'name': name,
+      'description': description,
+      'images': images, // Imagens finais
+      'sizes': exportSizeList(),
+    };
+
+    try {
+      if (id.isEmpty) {
+        final doc = await firestore.collection('products').add(data);
+        id = doc.id;
+      } else {
+        await firestore.collection('products').doc(id).update(data);
+      }
+    } catch (e) {
+      debugPrint('Erro ao salvar o produto: $e');
+    }
   }
 
   /// Converte os tamanhos em uma lista de Map<String, dynamic> para exportação
   List<Map<String, dynamic>> exportSizeList() {
     return sizes.map((size) => size.toMap()).toList();
-  }
-
-  /// Salva o produto no Firestore, evitando sobrescritas desnecessárias
-  Future<void> saveToFirestore() async {
-    final Map<String, dynamic> data = {
-      'name': name,
-      'description': description,
-      'images': images,
-      'sizes': exportSizeList(),
-    };
-
-    if (id.isEmpty) {
-      final doc = await firestore.collection('products').add(data);
-      id = doc.id;
-    } else {
-      await firestoreRef.update(data);
-    }
   }
 
   /// Retorna uma cópia do produto
