@@ -23,23 +23,32 @@ class ProductListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(4.0),
         ),
         child: Container(
-          height: 150,
+          constraints: const BoxConstraints(
+              minHeight: 150), // Definição de tamanho mínimo
           padding: const EdgeInsets.all(16.0),
           child: Row(
+            crossAxisAlignment:
+                CrossAxisAlignment.start, // Alinhamento correto dos elementos
             children: [
-              AspectRatio(
-                aspectRatio: 1.0,
-                child: Image.network(
-                  product.images.isNotEmpty
-                      ? product.images.first
-                      : 'https://via.placeholder.com/150', // Imagem padrão caso não tenha
-                  fit: BoxFit.cover,
+              SizedBox(
+                // Define um tamanho fixo para a imagem
+                width: 100,
+                height: 100,
+                child: AspectRatio(
+                  aspectRatio: 1.0,
+                  child: Image.network(
+                    product.images.isNotEmpty
+                        ? product.images.first
+                        : 'https://via.placeholder.com/150', // Imagem padrão
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(width: 16.0),
               Expanded(
+                // Garante que o texto não quebre o layout
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -71,51 +80,54 @@ class ProductListTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    FutureBuilder<num>(
-                      future: product.basePriceAsync,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Text(
-                            "Carregando...",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 19.0,
-                              color: Colors.grey,
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return const Text(
-                            "Erro ao carregar",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 19.0,
-                              color: Colors.red,
-                            ),
-                          );
-                        } else {
-                          final preco = snapshot.data ?? 0;
-                          if (preco == 0) {
+                    SizedBox(
+                      height: 24, // Evita problemas de altura variável
+                      child: FutureBuilder<num>(
+                        future: product.basePriceAsync,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const Text(
-                              "Sem estoque",
+                              "Carregando...",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 19.0,
+                                color: Colors.grey,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return const Text(
+                              "Erro ao carregar",
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 19.0,
                                 color: Colors.red,
                               ),
                             );
-                          }
+                          } else {
+                            final preco = snapshot.data ?? 0;
+                            if (preco == 0) {
+                              return const Text(
+                                "Sem estoque",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 19.0,
+                                  color: Colors.red,
+                                ),
+                              );
+                            }
 
-                          return Text(
-                            "R\$ ${preco.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 19.0,
-                              color: Colors.green,
-                            ),
-                          );
-                        }
-                      },
+                            return Text(
+                              "R\$ ${preco.toStringAsFixed(2)}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 19.0,
+                                color: Colors.green,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

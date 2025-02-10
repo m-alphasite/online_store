@@ -6,7 +6,7 @@ import 'package:online_store/common/custom_drawer/minhas_cores.dart';
 import 'image_source_sheet.dart';
 
 class ImagesForm extends StatefulWidget {
-  const ImagesForm({Key? key, required this.product}) : super(key: key);
+  const ImagesForm({super.key, required this.product});
 
   final Product product;
 
@@ -50,11 +50,15 @@ class _ImagesFormState extends State<ImagesForm> {
   @override
   Widget build(BuildContext context) {
     return FormField<List<dynamic>>(
-      initialValue: (widget.product.images),
+      initialValue: List.from(widget.product.images),
       validator: (images) {
         if (images!.isEmpty) {
           return 'Insira pelo menos uma imagem.';
         }
+        return null;
+      },
+      onSaved: (images) {
+        widget.product.newImages = images!;
       },
       builder: (state) {
         final List<Widget> imageWidgets = state.value?.map<Widget>((image) {

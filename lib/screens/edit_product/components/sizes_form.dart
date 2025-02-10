@@ -56,7 +56,7 @@ class SizesForm extends StatelessWidget {
               ),
             ],
             // Exibe os tamanhos existentes com campos de entrada
-            ...?state.value?.map((size) {
+            ...state.value?.map((size) {
                   final index = state.value!.indexOf(size);
 
                   return Padding(

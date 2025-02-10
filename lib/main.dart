@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
             case '/edit_product':
               final product = settings.arguments as Product?;
               return MaterialPageRoute(
-                builder: (_) => EditProductScreens(p: product),
+                builder: (_) => EditProductScreens(initialProduct: product),
               );
 
             case '/produtos':

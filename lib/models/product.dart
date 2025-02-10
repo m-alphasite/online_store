@@ -9,7 +9,11 @@ class Product extends ChangeNotifier {
     required this.description,
     required this.images,
     required this.sizes,
-  });
+  }) {
+    _selectedSize =
+        sizes.isNotEmpty ? sizes.first : ItemSize(name: '', price: 0, stock: 0);
+    _updateBasePrice();
+  }
 
   /// Construtor a partir de um documento do Firestore
   Product.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -23,6 +27,7 @@ class Product extends ChangeNotifier {
 
     _selectedSize =
         sizes.isNotEmpty ? sizes.first : ItemSize(name: '', price: 0, stock: 0);
+    _updateBasePrice(); // Garante que _basePrice seja inicializado corretamente
   }
 
   late String id;
@@ -30,6 +35,8 @@ class Product extends ChangeNotifier {
   late String description;
   List<String> images = [];
   List<ItemSize> sizes = [];
+
+  List<dynamic> newImages = [];
 
   /// Tamanho selecionado atualmente
   late ItemSize _selectedSize;
@@ -45,73 +52,42 @@ class Product extends ChangeNotifier {
   /// Verifica se o produto tem estoque
   bool get hasStock => totalStock > 0;
 
-  /// Preço base (menor preço entre tamanhos com estoque) com setter para atualização
-  late num _basePrice =
-      0; // Adicionamos um campo privado para armazenar o valor
+  /// Preço base (menor preço entre tamanhos com estoque)
+  late num _basePrice = 0;
 
-  num get basePrice => _basePrice; // Getter para acessar o menor preço
-
+  num get basePrice => _basePrice;
   set basePrice(num value) {
     _basePrice = value;
-    notifyListeners(); // Atualiza os ouvintes quando o preço mudar
+    notifyListeners();
   }
 
-  /// Método assíncrono para buscar o menor preço disponível no Firestore
+  /// Atualiza `_basePrice` com o menor preço disponível
+  void _updateBasePrice() {
+    final pricesWithStock = sizes
+        .where((size) => size.stock > 0)
+        .map((size) => size.price)
+        .toList();
+    _basePrice = pricesWithStock.isNotEmpty
+        ? pricesWithStock.reduce((a, b) => a < b ? a : b)
+        : 0;
+  }
+
+  /// Obtém o menor preço de um tamanho com estoque de forma assíncrona
   Future<num> get basePriceAsync async {
     final pricesWithStock =
         sizes.where((size) => size.hasStock).map((size) => size.price).toList();
-
-    if (pricesWithStock.isNotEmpty) {
-      return pricesWithStock.reduce((a, b) => a < b ? a : b);
-    } else {
-      return await _findCheapestAvailableProduct();
-    }
-  }
-
-  /// Busca o menor preço disponível de outro produto no Firestore
-  Future<num> _findCheapestAvailableProduct() async {
-    try {
-      final productsSnapshot =
-          await FirebaseFirestore.instance.collection('products').get();
-
-      num? lowestPrice;
-
-      for (final doc in productsSnapshot.docs) {
-        final product = Product.fromDocument(doc);
-
-        final productPricesWithStock = product.sizes
-            .where((size) => size.hasStock)
-            .map((size) => size.price)
-            .toList();
-
-        if (productPricesWithStock.isNotEmpty) {
-          final cheapestProductPrice =
-              productPricesWithStock.reduce((a, b) => a < b ? a : b);
-
-          if (lowestPrice == null || cheapestProductPrice < lowestPrice) {
-            lowestPrice = cheapestProductPrice;
-          }
-        }
-      }
-
-      debugPrint("Menor preço global encontrado: R\$ ${lowestPrice ?? 0}");
-      return lowestPrice ?? 0; // Retorna 0 se nenhum produto tiver estoque
-    } catch (e) {
-      debugPrint('Erro ao buscar outro produto com estoque: $e');
-      return 0;
-    }
+    return pricesWithStock.isNotEmpty
+        ? pricesWithStock.reduce((a, b) => a < b ? a : b)
+        : 0;
   }
 
   /// Busca um tamanho pelo nome
   ItemSize? findSize(String name) {
-    try {
-      return sizes.firstWhere((size) => size.name == name);
-    } catch (e) {
-      return null;
-    }
+    return sizes.firstWhere((size) => size.name == name,
+        orElse: () => ItemSize(name: '', price: 0, stock: 0));
   }
 
-  /// Atualiza as propriedades do produto
+  /// Atualiza os atributos do produto e notifica ouvintes
   void updateProduct({
     String? newName,
     String? newDescription,
@@ -122,13 +98,15 @@ class Product extends ChangeNotifier {
     description = newDescription ?? description;
     images = newImages ?? images;
     sizes = newSizes ?? sizes;
+    _updateBasePrice();
     notifyListeners();
   }
 
-  /// Adiciona um tamanho (com validação para evitar duplicados)
+  /// Adiciona um tamanho ao produto, garantindo que não haja duplicatas
   void addSize(ItemSize size) {
     if (!sizes.any((s) => s.name == size.name)) {
       sizes.add(size);
+      _updateBasePrice();
       notifyListeners();
     } else {
       debugPrint('Tamanho "${size.name}" já existe. Não foi adicionado.');
@@ -141,21 +119,22 @@ class Product extends ChangeNotifier {
     if (_selectedSize == size && sizes.isNotEmpty) {
       _selectedSize = sizes.first;
     }
+    _updateBasePrice();
     notifyListeners();
   }
 
-  /// Valida os tamanhos antes de salvar
+  /// Valida se os tamanhos do produto estão corretos
   bool validateSizes() {
     for (final size in sizes) {
       if (size.name.isEmpty || size.price <= 0 || size.stock < 0) {
-        debugPrint('Erro: Tamanho inválido - $size');
+        debugPrint('Erro: Tamanho inválido - ${size.toMap()}');
         return false;
       }
     }
     return true;
   }
 
-  /// Salva o produto no Firestore (com validação)
+  /// Salva o produto no Firestore, evitando sobrescritas desnecessárias
   Future<void> saveToFirestore() async {
     if (!validateSizes()) {
       debugPrint('Erro: Existem tamanhos inválidos. Produto não salvo.');
@@ -167,18 +146,29 @@ class Product extends ChangeNotifier {
       'description': description,
       'images': images,
       'sizes': sizes.map((size) => size.toMap()).toList(),
-      'basePrice': basePrice, // Agora o preço base será salvo no Firestore
+      'basePrice': basePrice,
     };
 
     try {
-      final docRef = FirebaseFirestore.instance.collection('products').doc(id);
-      await docRef.set(data, SetOptions(merge: true));
-      debugPrint('Produto "$name" salvo com sucesso!');
+      if (id.isEmpty) {
+        // Criando um novo documento
+        final docRef =
+            await FirebaseFirestore.instance.collection('products').add(data);
+        id = docRef.id; // Atribui o ID gerado ao produto
+        debugPrint('Novo produto "$name" salvo com sucesso com ID: $id');
+      } else {
+        // Atualizando um produto existente
+        final docRef =
+            FirebaseFirestore.instance.collection('products').doc(id);
+        await docRef.set(data, SetOptions(merge: true));
+        debugPrint('Produto "$name" atualizado com sucesso!');
+      }
     } catch (e) {
       debugPrint('Erro ao salvar o produto: $e');
     }
   }
 
+  /// Retorna uma cópia do produto
   Product clone() {
     return Product(
       id: id,
@@ -187,5 +177,10 @@ class Product extends ChangeNotifier {
       images: List.from(images),
       sizes: sizes.map((size) => size.clone()).toList(),
     );
+  }
+
+  @override
+  String toString() {
+    return 'Product{id: $id, name: $name, description: $description, images: $images, sizes: $sizes}';
   }
 }
