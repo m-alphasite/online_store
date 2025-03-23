@@ -19,13 +19,31 @@
   <li><strong>HTTP</strong>: Para a comunicação entre o aplicativo Flutter e os serviços do Firebase.</li>
 </ul>
 
+
+
 ## 📊 Estado do Projeto
 
-Projeto em desenvolvimento:
-
-
+![Progresso](https://img.shields.io/badge/Progresso-40%25-red?style=for-the-badge&labelColor=000000&color=FF0000&logo=github)
 
 > Atualmente, cerca de 40% das funcionalidades estão implementadas.
+
+
+##  Autor
+<h2>Marco Antônio</h2>
+
+<p>Desenvolvedor Full-Stack </p>
+
+<p>
+  <a href="https://github.com/marcosynky" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=white" />
+  </a>
+  <a href="https://www.instagram.com/marcosynky/" target="_blank">
+    <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" />
+  </a>
+ 
+</p>
+
+
 
 ## 📱 Funcionalidades
 
